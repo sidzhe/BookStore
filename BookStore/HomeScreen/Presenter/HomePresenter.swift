@@ -10,7 +10,8 @@ import Foundation
 //MARK: - Protocols
 protocol HomeViewProtocol: AnyObject {
     func updateWithData(topBooks: [BookModel], recentBooks: [BookModel], times: [TimeModel])
-    func updateCellAppearance(at indexPath: IndexPath, isSelected: Bool)
+    func didSelectItemAt(at indexPath: IndexPath, isSelected: Bool)
+    func didSelectItemAt(at indexPath: IndexPath)
 
 }
 
@@ -57,11 +58,15 @@ final class HomePresenter: HomePresenterProtocol {
     func didSelectItemAt(_ indexPath: IndexPath) {
         // Сообщить View об изменении состояния предыдущей выбранной ячейки
         if let lastIndexPath = lastSelectedIndexPath {
-            view?.updateCellAppearance(at: lastIndexPath, isSelected: false)
+            view?.didSelectItemAt(at: lastIndexPath, isSelected: false)
         }
         // Обновить текущую выбранную ячейку и изменить её внешний вид
         lastSelectedIndexPath = indexPath
-        view?.updateCellAppearance(at: indexPath, isSelected: true)
+        view?.didSelectItemAt(at: indexPath, isSelected: true)
+    }
+     
+    func didSelectItem(_ indexPath: IndexPath) {
+        view?.didSelectItemAt(at: indexPath)
     }
     
     //SearchBar Delegate

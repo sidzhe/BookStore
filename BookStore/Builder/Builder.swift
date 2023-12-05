@@ -35,6 +35,13 @@ final class Builder {
         return view
     }
     
+//    static func createDescriptionVC() -> UIViewController {
+//        let view = DescriptionViewController()
+//        let presenter = DescriptionPresenter(view: view)
+//        view.presenter = presenter
+//        return view
+//    }
+    
     ///CategoriesVC
     static func createCategoriesVC() -> UIViewController {
         let view = CategoriesViewController()

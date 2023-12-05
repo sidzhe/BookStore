@@ -231,12 +231,34 @@ extension HomeViewController: UISearchBarDelegate {
 //MARK: - HomeViewProtocol
 
 extension HomeViewController: HomeViewProtocol {
+    func didSelectItemAt(at indexPath: IndexPath) {
+        switch indexPath.section {
+        case 0:
+            return
+//            guard let cell = collectionView.cellForItem(at: indexPath) as? TimeCell else { return }
+            
+        case 1:
+            guard let cell = collectionView.cellForItem(at: indexPath) as? BookCell else { return }
+            let vc = DescriptionViewController(book: presenter.topBooks[indexPath.row])
+            navigationController?.pushViewController(vc, animated: true)
+            
+        case 2:
+            guard let cell = collectionView.cellForItem(at: indexPath) as? BookCell else { return }
+            let vc = DescriptionViewController(book: presenter.recentBooks[indexPath.row])
+            navigationController?.pushViewController(vc, animated: true)
+            
+        default: break
+        }
+    }
+    
 
     //Цвет ячеек
-        func updateCellAppearance(at indexPath: IndexPath, isSelected: Bool) {
+        func didSelectItemAt(at indexPath: IndexPath, isSelected: Bool) {
             guard let cell = collectionView.cellForItem(at: indexPath) as? TimeCell else { return }
             
             cell.color(isSelected ? .black : .clear)
+            
+
             
         }
     
@@ -264,5 +286,6 @@ extension HomeViewController: HomeViewProtocol {
 extension HomeViewController:  UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         presenter.didSelectItemAt(indexPath)
+        presenter.didSelectItem(indexPath)
     }
 }

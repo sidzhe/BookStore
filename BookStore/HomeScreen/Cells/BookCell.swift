@@ -14,9 +14,9 @@ final class BookCell: UICollectionViewCell {
     
     private let bookImage = UIImageView()
     
-    private let genre = UILabel(font: .systemFont(ofSize: 10))
-    private let bookName = UILabel(font: .boldSystemFont(ofSize: 15))
-    private let author = UILabel(font: .boldSystemFont(ofSize: 10))
+    private let genre = UILabel(font: .systemFont(ofSize: 10), textColor: .white)
+    private let bookName = UILabel(font: .boldSystemFont(ofSize: 15), textColor: .white)
+    private let author = UILabel(font: .boldSystemFont(ofSize: 10), textColor: .white)
     
     private lazy var stackView = UIStackView(.vertical, 5, .fill, .equalSpacing, [genre, bookName, author])
     
