@@ -27,6 +27,7 @@
 		EB037F9B2B1CD9D9006E9D45 /* ProductPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB037F9A2B1CD9D9006E9D45 /* ProductPresenter.swift */; };
 		EB037F9D2B1CDA5D006E9D45 /* FavoritesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB037F9C2B1CDA5D006E9D45 /* FavoritesPresenter.swift */; };
 		EB037F9F2B1CDB09006E9D45 /* AccountPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB037F9E2B1CDB09006E9D45 /* AccountPresenter.swift */; };
+		FA8ED8772B1F9B050090DB03 /* FavouriteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8ED8762B1F9B050090DB03 /* FavouriteCell.swift */; };
 		FAACE4DE2B1F7B0D00EA7DE4 /* DescriptionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAACE4DD2B1F7B0D00EA7DE4 /* DescriptionPresenter.swift */; };
 		FAACE4E02B1F80BB00EA7DE4 /* DescriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAACE4DF2B1F80BB00EA7DE4 /* DescriptionViewController.swift */; };
 		FAD12ABD2B1F108800E7B3C1 /* TimeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD12ABC2B1F108800E7B3C1 /* TimeModel.swift */; };
@@ -64,6 +65,7 @@
 		EB037F9A2B1CD9D9006E9D45 /* ProductPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductPresenter.swift; sourceTree = "<group>"; };
 		EB037F9C2B1CDA5D006E9D45 /* FavoritesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesPresenter.swift; sourceTree = "<group>"; };
 		EB037F9E2B1CDB09006E9D45 /* AccountPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPresenter.swift; sourceTree = "<group>"; };
+		FA8ED8762B1F9B050090DB03 /* FavouriteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteCell.swift; sourceTree = "<group>"; };
 		FAACE4DD2B1F7B0D00EA7DE4 /* DescriptionPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionPresenter.swift; sourceTree = "<group>"; };
 		FAACE4DF2B1F80BB00EA7DE4 /* DescriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionViewController.swift; sourceTree = "<group>"; };
 		FAD12ABC2B1F108800E7B3C1 /* TimeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeModel.swift; sourceTree = "<group>"; };
@@ -188,8 +190,9 @@
 		EB037F7A2B1CB202006E9D45 /* FavoritesScreen */ = {
 			isa = PBXGroup;
 			children = (
-				EB037F842B1CBC85006E9D45 /* FavoritesViewController.swift */,
-				EB037F9C2B1CDA5D006E9D45 /* FavoritesPresenter.swift */,
+				FA49BC652B207D5900CE2EE0 /* View */,
+				FA49BC662B207D6700CE2EE0 /* Presenter */,
+				FA8ED8752B1F9AF90090DB03 /* Cells */,
 			);
 			path = FavoritesScreen;
 			sourceTree = "<group>";
@@ -225,6 +228,30 @@
 				EB037F8C2B1CD4DE006E9D45 /* Builder.swift */,
 			);
 			path = Builder;
+			sourceTree = "<group>";
+		};
+		FA49BC652B207D5900CE2EE0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EB037F842B1CBC85006E9D45 /* FavoritesViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		FA49BC662B207D6700CE2EE0 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				EB037F9C2B1CDA5D006E9D45 /* FavoritesPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		FA8ED8752B1F9AF90090DB03 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				FA8ED8762B1F9B050090DB03 /* FavouriteCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		FAD12AB82B1F104F00E7B3C1 /* View */ = {
@@ -381,6 +408,7 @@
 				EB037F8F2B1CD515006E9D45 /* TabBarPreseneter.swift in Sources */,
 				EB037F872B1CBC9D006E9D45 /* AccountViewController.swift in Sources */,
 				FAD12AD22B1F114C00E7B3C1 /* UIView-ext.swift in Sources */,
+				FA8ED8772B1F9B050090DB03 /* FavouriteCell.swift in Sources */,
 				EB037F612B1CB042006E9D45 /* AppDelegate.swift in Sources */,
 				EB037F632B1CB042006E9D45 /* SceneDelegate.swift in Sources */,
 				EB037F8D2B1CD4DE006E9D45 /* Builder.swift in Sources */,

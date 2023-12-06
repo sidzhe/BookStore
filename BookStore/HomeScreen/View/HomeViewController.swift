@@ -14,7 +14,7 @@ final class HomeViewController: UIViewController {
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private let image = UIImage(named: "book")!
     private let searchController = UISearchController(searchResultsController: nil)
-    var presenter: HomePresenter!
+    var presenter: HomePresenterProtocol!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -235,7 +235,6 @@ extension HomeViewController: HomeViewProtocol {
         switch indexPath.section {
         case 0:
             return
-//            guard let cell = collectionView.cellForItem(at: indexPath) as? TimeCell else { return }
             
         case 1:
             guard let cell = collectionView.cellForItem(at: indexPath) as? BookCell else { return }
