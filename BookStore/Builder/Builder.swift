@@ -30,8 +30,7 @@ final class Builder {
     ///HomeVC
     static func createHomeVC() -> UIViewController {
         let view = HomeViewController()
-        let networkService = NetworkService()
-        let presenter = HomePresenter(view: view, networkService: networkService)
+        let presenter = HomePresenter(view: view)
         view.presenter = presenter
         return view
     }
