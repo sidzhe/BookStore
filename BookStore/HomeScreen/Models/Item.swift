@@ -6,9 +6,9 @@
 //
 
 import Foundation
-struct Item: Hashable {
 
+struct Item: Hashable {
     var time: TimeModel?
-    var book: BookModel?
+    var book: Book?
     let identifier = UUID()
 }

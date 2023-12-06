@@ -10,25 +10,23 @@ import UIKit
 
 final class HomeViewController: UIViewController {
     
+    //MARK: - Properties
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private let image = UIImage(named: "book")!
     private let searchController = UISearchController(searchResultsController: nil)
     var presenter: HomePresenter!
     
+    //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter = HomePresenter(view: self)
+        
         configureCollectionView()
         configureDataSource()
-        updateWithData(topBooks: presenter.topBooks, recentBooks: presenter.recentBooks, times: presenter.times)
-        view.backgroundColor = .white
         setupSearchController()
         
-
     }
     
-
     //MARK: - SearchBar setup
     private func setupSearchController() {
         navigationItem.searchController = searchController
@@ -43,16 +41,12 @@ final class HomeViewController: UIViewController {
     
     //MARK: - CollectionViewConfig
     private func configureCollectionView() {
+        view.backgroundColor = .white
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
         collectionView.delegate = self
         collectionView.backgroundColor = .clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
-        
-        // Регистрация ячеек
-        collectionView.register(BookCell.self, forCellWithReuseIdentifier: BookCell.identifier)
-        collectionView.register(TimeCell.self, forCellWithReuseIdentifier: TimeCell.identifier)
-        collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseIdentifier)
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -60,10 +54,7 @@ final class HomeViewController: UIViewController {
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
-        
     }
-    
-    
     
     //MARK: - Layout
     private func createLayout() -> UICollectionViewLayout {
@@ -92,9 +83,8 @@ final class HomeViewController: UIViewController {
                 
                 section.boundarySupplementaryItems = [header]
                 return section
-            
+                
             case .topBooks:
-                // Создаем секцию для книг
                 let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(175), heightDimension: .absolute(230))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 5, bottom: 10, trailing: 5)
@@ -108,7 +98,6 @@ final class HomeViewController: UIViewController {
                 return section
                 
             case .recentBooks:
-                // Создаем секцию для книг
                 let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(175), heightDimension: .absolute(230))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 5, bottom: 10, trailing: 5)
@@ -118,20 +107,14 @@ final class HomeViewController: UIViewController {
                 
                 section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .continuous
-                
-                // Добавляем заголовок к секции
+
                 let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
                 let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
                 header.pinToVisibleBounds = false
                 header.zIndex = 2
-                
                 section.boundarySupplementaryItems = [header]
-
+                
                 return section
-            
-            default:
-                // Возвращаем nil для неизвестных секций
-                return nil
             }
         }
     }
@@ -142,11 +125,10 @@ final class HomeViewController: UIViewController {
         return UICollectionView.CellRegistration<TimeCell, TimeModel> { (cell, indexPath, timeModel) in
             cell.config(with: timeModel)
         }
-        
     }
     
-    private func registerBook() -> UICollectionView.CellRegistration<BookCell, BookModel> {
-        return UICollectionView.CellRegistration<BookCell, BookModel> { (cell, indexPath, bookModel) in
+    private func registerBook() -> UICollectionView.CellRegistration<BookCell, Book> {
+        return UICollectionView.CellRegistration<BookCell, Book> { (cell, indexPath, bookModel) in
             cell.config(book: bookModel, image: self.image)
         }
     }
@@ -207,57 +189,55 @@ final class HomeViewController: UIViewController {
         }
     }
     
-
+    
 }
 
 
 //MARK: - SearchBar Delegate
 extension HomeViewController: UISearchBarDelegate {
-    // Расширение для обработки  поиска
-        // Вызывается, когда текст изменяется
-        func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-            presenter.didTextChange(searchText)
-        }
-        
-        // Вызывается, когда пользователь нажимает кнопку
-        func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-            searchBar.resignFirstResponder()
-            if let searchText = searchBar.text {
-                presenter.didTapSearchButton(searchText)
-            }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        presenter.didTextChange(searchText)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        if let searchText = searchBar.text {
+            presenter.didTapSearchButton(searchText)
         }
     }
+}
 
 //MARK: - HomeViewProtocol
 
 extension HomeViewController: HomeViewProtocol {
-
+    func update() {
+        updateWithData()
+    }
+    
     //Цвет ячеек
-        func updateCellAppearance(at indexPath: IndexPath, isSelected: Bool) {
-            guard let cell = collectionView.cellForItem(at: indexPath) as? TimeCell else { return }
-            
-            cell.color(isSelected ? .black : .clear)
-            
-        }
+    func updateCellAppearance(at indexPath: IndexPath, isSelected: Bool) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? TimeCell else { return }
+        
+        cell.color(isSelected ? .black : .clear)
+        
+    }
     
     
     //MARK: - SnapShot
-    
-    func updateWithData(topBooks: [BookModel], recentBooks: [BookModel], times: [TimeModel]) {
-        // Создаем начальный снимок и применяем его к DataSource
+    func updateWithData() {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         
         snapshot.appendSections([.time, .topBooks, .recentBooks])
-                let timeItems = times.map { Item(time: $0) } /*times.map { Item(time: $0, book: nil) }*/
-                snapshot.appendItems(timeItems, toSection: .time)
-                let topBookItems = topBooks.map { Item(book: $0) } /*topBooks.map { Item(book: $0) }*/
-                snapshot.appendItems(topBookItems, toSection: .topBooks)
-                let recentBookItems = recentBooks.map { Item(book: $0) } /*recentBooks.map { Item(book: $0) }*/
-                snapshot.appendItems(recentBookItems, toSection: .recentBooks)
-            
+        let timeItems = presenter.times.map { Item(time: $0) }
+        guard let topBookItems = presenter.topBooks?.compactMap({ Item(book: $0)}),
+              let recentBookItems =  presenter.recentBooks?.compactMap({ Item(book: $0)}) else { return }
+        snapshot.appendItems(timeItems, toSection: .time)
+        snapshot.appendItems(topBookItems, toSection: .topBooks)
+        snapshot.appendItems(recentBookItems, toSection: .recentBooks)
+        
         dataSource.apply(snapshot, animatingDifferences: true)
     }
-
+    
 }
 
 //MARK: - UICollectionView Delegate

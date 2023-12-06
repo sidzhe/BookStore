@@ -9,50 +9,39 @@ import Foundation
 
 //MARK: - Protocols
 protocol HomeViewProtocol: AnyObject {
-    func updateWithData(topBooks: [BookModel], recentBooks: [BookModel], times: [TimeModel])
     func updateCellAppearance(at indexPath: IndexPath, isSelected: Bool)
-
+    func update()
 }
 
 protocol HomePresenterProtocol: AnyObject {
-    init(view: HomeViewProtocol)
+    var topBooks: [Book]? { get }
+    var recentBooks: [Book]? { get }
+    var times: [TimeModel] { get }
+    init(view: HomeViewProtocol, networkService: NetworkServiceProtocol)
 }
 
 //MARK: - HomePresenter
 final class HomePresenter: HomePresenterProtocol {
     
-    
     //MARK: - Properties
     weak var view: HomeViewProtocol?
+    var networkService: NetworkServiceProtocol
     private var lastSelectedIndexPath: IndexPath?
-    //Мок данные
-   let topBooks: [BookModel] = [
-        .init(genre: "classic", bookName: "The picture of Dorian Gray", author: "Oscar Wilde"),
-        .init(genre: "classic", bookName: "The Catcher in the Rye", author: "J.D. Salinger"),
-        .init(genre: "classic", bookName: "The Catcher in the Rye", author: "J.D. Salinger"),
-        .init(genre: "classic", bookName: "The Catcher in the Rye", author: "J.D. Salinger"),
-        .init(genre: "classic", bookName: "The Catcher in the Rye", author: "J.D. Salinger"),
-        .init(genre: "classic", bookName: "The Catcher in the Rye", author: "J.D. Salinger"),
-    ]
+        
+    var topBooks: [Book]?
+    var recentBooks: [Book]?
+    var times = [TimeModel(times: "This Week"), TimeModel(times: "This Month"), TimeModel(times: "This Year")]
     
-     let recentBooks: [BookModel] = [
-        .init(genre: "Young adult", bookName: "Nine Liars", author: "Maureen Johnson"),
-        .init(genre: "Fantasy", bookName: "Sorrow and Starlight", author: "Caroline Peckham, Susanne Valenti"),
-        .init(genre: "Young adult", bookName: "Nine Liars", author: "Maureen Johnson"),
-        .init(genre: "Young adult", bookName: "Nine Liars", author: "Maureen Johnson"),
-        .init(genre: "Young adult", bookName: "Nine Liars", author: "Maureen Johnson"),
-        .init(genre: "Young adult", bookName: "Nine Liars", author: "Maureen Johnson"),
-
-    ]
+    //MARK: - Init
+    required init(view: HomeViewProtocol, networkService: NetworkServiceProtocol) {
+        self.view = view
+        self.networkService = networkService
+        topBooksRequest()
+        recentBookRequest(sort: .monthly)
+    }
     
-     let times: [TimeModel] = [
-        .init(times: "This Week"),
-        .init(times: "This Month"),
-        .init(times: "This Year")
-    ]
+    //MARK: - Methods
     
- 
- 
     //CollectionView Delegate
     func didSelectItemAt(_ indexPath: IndexPath) {
         // Сообщить View об изменении состояния предыдущей выбранной ячейки
@@ -72,11 +61,28 @@ final class HomePresenter: HomePresenterProtocol {
         print(text)
     }
     
+    func topBooksRequest() {
+        networkService.searchBooks(keyWords: "гарри") { [weak self] (result: Result<Books, Error>) in
+            switch result {
+            case .success(let book):
+                self?.recentBooks = book.docs
+                self?.topBooks = book.docs
+                self?.view?.update()
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
     
-    
-    //MARK: - Init
-    required init(view: HomeViewProtocol) {
-        self.view = view
+    func recentBookRequest(sort: TrendingSort) {
+        networkService.getTrendingBooks(sort: sort) { [weak self] (result: Result<[Work], Error>) in
+            switch result {
+            case .success(let trendBooks):
+                print(trendBooks)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
 }
 

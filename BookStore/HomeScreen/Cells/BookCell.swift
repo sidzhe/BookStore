@@ -6,31 +6,33 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class BookCell: UICollectionViewCell {
     
+    //MARK: - Properties
     private let topView = UIView(backgroundColor: .systemGray3)
     private let bottomView = UIView(backgroundColor: .black)
-    
     private let bookImage = UIImageView()
-    
     private let genre = UILabel(font: .systemFont(ofSize: 10))
     private let bookName = UILabel(font: .boldSystemFont(ofSize: 15))
     private let author = UILabel(font: .boldSystemFont(ofSize: 10))
-    
     private lazy var stackView = UIStackView(.vertical, 5, .fill, .equalSpacing, [genre, bookName, author])
     
-    
+    //MARK: - Inits
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         setupView()
         setupConst()
+        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: - Methods
     private func setupView() {
         contentView.addSubViews(topView, bottomView)
         bottomView.addSubViews(stackView)
@@ -63,12 +65,12 @@ final class BookCell: UICollectionViewCell {
         ])
     }
     
-    func config(book: BookModel, image: UIImage) {
-        self.genre.text = book.genre
-        self.bookName.text = book.bookName
-        self.author.text = book.author
-        self.bookImage.image = image
+    func config(book: Book, image: UIImage) {
+        self.genre.text = book.iaCollection?.first!
+        self.bookName.text = book.title
+        self.author.text = book.authorName?.first!
+        self.bookImage.kf.setImage(with: book.urlImage)
     }
-
+    
 }
 

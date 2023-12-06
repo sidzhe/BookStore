@@ -7,35 +7,21 @@
 
 import Foundation
 
-enum NetworkConstants {
-    static let baseUrl = "https://openlibrary.org"
-    static let imageCover = "https://covers.openlibrary.org/b/id"
-}
-
-enum Endpoint: String {
-    case search = "/search.json?q="
-    case trending = "/trending"
-    case ratings = "/ratings"
-}
-
-enum TrendingSort: String {
-    case daily = "/daily"
-    case weekly = "/weekly"
-    case monthly = "/monthly"
-}
-
+//MARK: - NetworkServiceProtocol
 protocol NetworkServiceProtocol {
-    func searchBooks(keyWords: String, completion: @escaping (Result<[Book], Error>) -> Void)
-//    func getCategories(completion: @escaping (Result<[Book], Error>) -> Void))
+    func searchBooks(keyWords: String, completion: @escaping (Result<Books, Error>) -> Void)
     func getTrendingBooks(sort: TrendingSort, completion: @escaping (Result<[Work], Error>) -> Void)
     func getDetailBook(key: String, completion: @escaping (Result<BooksDetail, Error>) -> Void)
     func getRating(works: String, completion: @escaping (Result<Rating, Error>) -> Void)
 }
 
-class NetworkService: NetworkServiceProtocol {
-    func getTrendingBooks(sort: TrendingSort = .daily, completion: @escaping (Result<[Work], Error>) -> Void) {
+
+//MARK: - NetworkService
+final class NetworkService: NetworkServiceProtocol {
+    
+    ///Trending
+    func getTrendingBooks(sort: TrendingSort, completion: @escaping (Result<[Work], Error>) -> Void) {
         guard let url = URL(string: NetworkConstants.baseUrl + Endpoint.trending.rawValue + sort.rawValue + ".json") else { return }
-        print(url)
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
             guard let data = data, error == nil else { return }
             do {
@@ -47,8 +33,9 @@ class NetworkService: NetworkServiceProtocol {
         }
         task.resume()
     }
-
-    func searchBooks(keyWords: String, completion: @escaping (Result<[Book], Error>) -> Void) {
+    
+    ///Search
+    func searchBooks(keyWords: String, completion: @escaping (Result<Books, Error>) -> Void) {
         let keyWordsReplace = keyWords.replacingOccurrences(of: " ", with: "+")
         guard let url = URL(string: NetworkConstants.baseUrl + Endpoint.search.rawValue + keyWordsReplace) else { return }
         print(url)
@@ -56,7 +43,7 @@ class NetworkService: NetworkServiceProtocol {
             guard let data = data, error == nil else { return }
             do {
                 let results = try JSONDecoder().decode(Books.self, from: data)
-                completion(.success(results.docs))
+                completion(.success(results))
             } catch {
                 completion(.failure(error))
             }
@@ -64,6 +51,7 @@ class NetworkService: NetworkServiceProtocol {
         task.resume()
     }
     
+    ///Rating
     func getRating(works: String, completion: @escaping (Result<Rating, Error>) -> Void) {
         guard let url = URL(string: NetworkConstants.baseUrl + works + Endpoint.ratings.rawValue + ".json") else { return }
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
@@ -78,9 +66,9 @@ class NetworkService: NetworkServiceProtocol {
         task.resume()
     }
     
+    ///Detail
     func getDetailBook(key: String, completion: @escaping (Result<BooksDetail, Error>) -> Void) {
         guard let url = URL(string: NetworkConstants.baseUrl + key + ".json") else { return }
-        print(url)
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data,_, error in
             guard let data = data, error == nil else { return }
             do {
