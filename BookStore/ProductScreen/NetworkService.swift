@@ -19,7 +19,7 @@ protocol NetworkServiceProtocol {
 //MARK: - NetworkService
 final class NetworkService: NetworkServiceProtocol {
     
-    ///Trending
+    ///TrendingBooks
     func getTrendingBooks(sort: TrendingSort, completion: @escaping (Result<[Work], Error>) -> Void) {
         guard let url = URL(string: NetworkConstants.baseUrl + Endpoint.trending.rawValue + sort.rawValue + ".json") else { return }
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
@@ -34,7 +34,7 @@ final class NetworkService: NetworkServiceProtocol {
         task.resume()
     }
     
-    ///Search
+    ///SearchBooks
     func searchBooks(keyWords: String, completion: @escaping (Result<Books, Error>) -> Void) {
         let keyWordsReplace = keyWords.replacingOccurrences(of: " ", with: "+")
         guard let url = URL(string: NetworkConstants.baseUrl + Endpoint.search.rawValue + keyWordsReplace) else { return }
@@ -51,7 +51,7 @@ final class NetworkService: NetworkServiceProtocol {
         task.resume()
     }
     
-    ///Rating
+    ///RatingBooks
     func getRating(works: String, completion: @escaping (Result<Rating, Error>) -> Void) {
         guard let url = URL(string: NetworkConstants.baseUrl + works + Endpoint.ratings.rawValue + ".json") else { return }
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
@@ -66,7 +66,7 @@ final class NetworkService: NetworkServiceProtocol {
         task.resume()
     }
     
-    ///Detail
+    ///DetailBooks
     func getDetailBook(key: String, completion: @escaping (Result<BooksDetail, Error>) -> Void) {
         guard let url = URL(string: NetworkConstants.baseUrl + key + ".json") else { return }
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data,_, error in
