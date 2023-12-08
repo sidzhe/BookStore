@@ -16,6 +16,7 @@ enum Endpoint: String {
     case search = "/search.json?q="
     case trending = "/trending"
     case ratings = "/ratings"
+    case subjects = "/subjects"
 }
 
 enum TrendingSort: String {

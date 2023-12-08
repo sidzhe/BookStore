@@ -65,7 +65,7 @@ final class HomePresenter: HomePresenterProtocol {
         networkService.searchBooks(keyWords: "гарри") { [weak self] (result: Result<Books, Error>) in
             switch result {
             case .success(let book):
-                self?.recentBooks = book.docs
+                self?.recentBooks = book.books
                 DispatchQueue.main.async { self?.view?.update() }
             case .failure(let error):
                 print(error.localizedDescription)

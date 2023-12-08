@@ -246,5 +246,9 @@ extension HomeViewController: HomeViewProtocol {
 extension HomeViewController:  UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         presenter.didSelectItemAt(indexPath)
+        
+        guard let book = presenter.topBooks?[indexPath.row] else { return }
+        let productViewController = Builder.createProductVC(book: book)
+        navigationController?.pushViewController(productViewController, animated: true)
     }
 }

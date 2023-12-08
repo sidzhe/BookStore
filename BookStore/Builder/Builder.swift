@@ -45,9 +45,9 @@ final class Builder {
     }
     
     ///ProductVC
-    static func createProductVC() -> UIViewController {
+    static func createProductVC(book: Work) -> UIViewController {
         let view = ProductViewController(productView: ProductView())
-        let presenter = ProductPresenter(view: view, networkService: NetworkService())
+        let presenter = ProductPresenter(view: view, networkService: NetworkService(), book: book)
         view.presenter = presenter
         return view
     }
