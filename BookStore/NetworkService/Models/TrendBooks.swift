@@ -21,12 +21,12 @@ struct Work: Codable, Hashable {
     let hasFulltext, publicScanB: Bool?
     let ia: [String]?
     let iaCollectionS, coverEditionKey: String?
-    let coverI: Int?
+    let cover_i: Int?
     let language, authorKey, authorName: [String]?
     let lendingEditionS, lendingIdentifierS, subtitle: String?
     let idLibrivox, idProjectGutenberg, idStandardEbooks: [String]?
 
     var urlImage: URL {
-        return URL(string: "\(NetworkConstants.imageCover)/\(coverI ?? 0)-M.jpg") ?? URL(fileURLWithPath: "")
+        return URL(string: "\(NetworkConstants.imageCover)/\(cover_i ?? 0)-M.jpg") ?? URL(fileURLWithPath: "")
     }
 }
