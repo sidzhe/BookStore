@@ -11,7 +11,7 @@ final class Builder {
     
     private init() {}
     
-    ///TabBarVC
+    //TabBarVC
     static func createTabBar() -> UIViewController {
         let view = TabBarController()
         let presenter = TabBarPresenter(view: view)
@@ -19,7 +19,7 @@ final class Builder {
         return view
     }
     
-    ///WelcomeVC
+    //WelcomeVC
     static func createWelcomeVC() -> UIViewController {
         let view = WelcomeViewController()
         let presenter = WelcomePresenter(view: view)
@@ -27,7 +27,7 @@ final class Builder {
         return view
     }
     
-    ///HomeVC
+    //HomeVC
     static func createHomeVC() -> UIViewController {
         let view = HomeViewController()
         let networkService = NetworkService()
@@ -35,8 +35,17 @@ final class Builder {
         view.presenter = presenter
         return view
     }
+    //SearchVC
+    static func createSearchVC(with text: String) -> UIViewController {
+        let view = SearchViewController()
+        let text = text
+        let networkService = NetworkService()
+        let presenter = SearchPresenter(view: view, networkService: networkService, text: text)
+        view.presenter = presenter
+        return view
+    }
     
-    ///CategoriesVC
+    //CategoriesVC
     static func createCategoriesVC() -> UIViewController {
         let view = CategoriesViewController()
         let presenter = CategoriesPresenter(view: view)
@@ -44,7 +53,7 @@ final class Builder {
         return view
     }
     
-    ///ProductVC
+    //ProductVC
     static func createProductVC(book: Work) -> UIViewController {
         let view = ProductViewController(productView: ProductView())
         let presenter = ProductPresenter(view: view, networkService: NetworkService(), book: book)
@@ -52,7 +61,7 @@ final class Builder {
         return view
     }
     
-    ///FavoritesVC
+    //FavoritesVC
     static func createFavoritesVC() -> UIViewController {
         let view = FavoritesViewController()
         let presenter = FavoritesPresenter(view: view)
@@ -60,7 +69,7 @@ final class Builder {
         return view
     }
     
-    ///AccountVC
+    //AccountVC
     static func createAccountVC() -> UIViewController {
         let view = AccountViewController()
         let presenter = AccountPresenter(view: view)

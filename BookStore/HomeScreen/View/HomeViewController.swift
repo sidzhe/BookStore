@@ -211,10 +211,10 @@ extension HomeViewController: UISearchBarDelegate {
 //MARK: - HomeViewProtocol
 
 extension HomeViewController: HomeViewProtocol {
-    func openSearchController(with book: [Book]) {
-        let vc = SearchViewController(books: book)
-        vc.modalPresentationStyle = .pageSheet
-        navigationController?.pushViewController(vc, animated: true)
+    func openSearchController(with text: String) {
+        let vc = Builder.createSearchVC(with: text)
+        print("Текст передан презентору из контроллера - \(text)")
+        self.present(vc, animated: true)
     }
     
     

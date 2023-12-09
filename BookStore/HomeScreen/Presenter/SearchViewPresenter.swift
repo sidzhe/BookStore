@@ -3,54 +3,70 @@ import Foundation
 
 //MARK: - Protocols
 protocol SearchViewProtocol: AnyObject {
-    //Удаление ячейки
-    func deleteItem(at indexPath: IndexPath)
     //Обновление UI коллекции
     func reloadData()
 }
 
 protocol SearchPresenterProtocol: AnyObject {
-    var books: [Books]? { get }
+    var books: [Book]? { get }
+    var text: String? { get }
+    func update(_ text: String)
+    func getBook(at indexPath: IndexPath) -> Book?
     //Получение книги
-    func getBook(with indexPath: IndexPath) -> Books?
-    //Удаление ячейки
-    func removeItem(at indexPath: IndexPath)
-    init(view: SearchViewProtocol, networkService: NetworkServiceProtocol)
+    init(view: SearchViewProtocol, networkService: NetworkServiceProtocol, text: String)
 }
 
 //MARK: - FavoritesPresenter
 final class SearchPresenter: SearchPresenterProtocol {
-    
-
-    
     //MARK: - Properties
     weak var view: SearchViewProtocol?
     var networkService: NetworkServiceProtocol
-    var books: [Books]?
+    var books: [Book]?
+    var text: String?
 
-    required init(view: SearchViewProtocol, networkService: NetworkServiceProtocol) {
+    required init(view: SearchViewProtocol, networkService: NetworkServiceProtocol, text: String) {
         self.view = view
         self.networkService = networkService
+        self.text = text
+        update(text)
     }
 
-    //Логика получения книги
-    func getBook(with indexPath: IndexPath) -> Books? {
-        return books?[indexPath.row]
-    }
-
-    //Логика удаления ячейки
-    func removeItem(at indexPath: IndexPath) {
-        if let books = books {
-            guard indexPath.row < books.count else { return }
-        }
-            // Сообщаем контроллеру о необходимости обновления
-        if books == nil {
-                view?.reloadData() // Метод для перезагрузки данных в коллекции
-            } else {
-                view?.deleteItem(at: indexPath) // Метод для удаления элемента
+    
+    func update(_ text: String) {
+        print("запроc ушел")
+        networkService.searchBooks(keyWords: text) { (result: Result<Books, Error>) in
+            print("Запрос ушел с текстом - \(text)")
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let book):
+                    print("Успех")
+                    if let books = book.books {
+                        self.books = self.tenthElement(books)
+                    }
+//                    self.books = tenthElement(book.books)
+                    self.view?.reloadData()
+                    if let books = self.books {
+                        print(books[0].authorName)
+                    }
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
             }
         }
+    }
     
-
+    func getBook(at indexPath: IndexPath) -> Book? {
+        return books?[indexPath.row]
+    }
+    
+    func tenthElement(_ array: [Book]) -> [Book] {
+        var books = [Book]()
+        array.forEach {
+            if books.count != 10 {
+                books.append($0)
+            }
+        }
+        return books
+    }
 
 }

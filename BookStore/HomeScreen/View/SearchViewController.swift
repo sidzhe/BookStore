@@ -10,20 +10,11 @@ import UIKit
 final class SearchViewController: UIViewController {
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 320, height: 140)
+        layout.itemSize = CGSize(width: 320, height: 142)
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
     }()    
     var presenter: SearchPresenterProtocol!
-    private var books: [Book]?
     
-    init(books: [Book]? = nil) {
-        super.init(nibName: nil, bundle: nil)
-        self.books = books
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,8 +35,8 @@ final class SearchViewController: UIViewController {
     }
     private func setupConst() {
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
         ])
@@ -58,7 +49,7 @@ extension SearchViewController: UICollectionViewDelegate {
 
 extension SearchViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let book = books {
+        if let book = presenter.books {
             return book.count
         } else {
             return 0
@@ -70,14 +61,21 @@ extension SearchViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchCell.identifier, for: indexPath) as? SearchCell else {
             return UICollectionViewCell()
         }
-        DispatchQueue.main.async {
-            if let books = self.books {
-                let book = books[indexPath.row]
-                cell.config(book: book)
-            }
+        if let book = presenter.getBook(at: indexPath) {
+            cell.config(book: book)
+            collectionView.reloadData()
         }
-
         return cell
+    }
+    
+    
+}
+
+extension SearchViewController: SearchViewProtocol {
+
+    
+    func reloadData() {
+        collectionView.reloadData()
     }
     
     

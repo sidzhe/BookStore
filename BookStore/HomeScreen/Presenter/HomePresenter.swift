@@ -11,7 +11,7 @@ import Foundation
 protocol HomeViewProtocol: AnyObject {
     func updateCellAppearance(at indexPath: IndexPath, isSelected: Bool)
     func update()
-    func openSearchController(with book: [Book])
+    func openSearchController(with text: String)
 }
 
 protocol HomePresenterProtocol: AnyObject {
@@ -96,25 +96,10 @@ final class HomePresenter: HomePresenterProtocol {
     func didTextChange(_ text: String) {
     }
     
+    
     func didTapSearchButton(_ text: String) {
-        networkService.searchBooks(keyWords: text) { (result: Result<Books, Error>) in
-            print("Запрос ушел с текстом - \(text)")
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let book):
-                    print("ответ пришел")
-                    if let book = book.books {
-                        self.searhedBook = book
-                    }
-                    if let searhedBook = self.searhedBook {
-                        self.view?.openSearchController(with: searhedBook)
-                    }
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    
-                }
-            }
-        }
+        print("Текст передан контроллеру из презентора - \(text)")
+        view?.openSearchController(with: text)
     }
     
 //    func topBooksRequest() {
