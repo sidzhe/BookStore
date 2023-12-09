@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		46CA68CF2B223E3E00166BC9 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CA68CE2B223E3E00166BC9 /* ListViewController.swift */; };
 		EB037F612B1CB042006E9D45 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB037F602B1CB042006E9D45 /* AppDelegate.swift */; };
 		EB037F632B1CB042006E9D45 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB037F622B1CB042006E9D45 /* SceneDelegate.swift */; };
 		EB037F652B1CB042006E9D45 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB037F642B1CB042006E9D45 /* TabBarController.swift */; };
@@ -30,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		46CA68CE2B223E3E00166BC9 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		EB037F5D2B1CB042006E9D45 /* BookStore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookStore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB037F602B1CB042006E9D45 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EB037F622B1CB042006E9D45 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -168,6 +170,7 @@
 			children = (
 				EB037F862B1CBC9D006E9D45 /* AccountViewController.swift */,
 				EB037F9E2B1CDB09006E9D45 /* AccountPresenter.swift */,
+				46CA68CE2B223E3E00166BC9 /* ListViewController.swift */,
 			);
 			path = AccountScreen;
 			sourceTree = "<group>";
@@ -286,6 +289,7 @@
 				EB037F972B1CD911006E9D45 /* CategoriesPresenter.swift in Sources */,
 				EB037F8A2B1CBCED006E9D45 /* CategoriesViewController.swift in Sources */,
 				EB037F9F2B1CDB09006E9D45 /* AccountPresenter.swift in Sources */,
+				46CA68CF2B223E3E00166BC9 /* ListViewController.swift in Sources */,
 				EB037F812B1CBC1A006E9D45 /* WelcomeViewController.swift in Sources */,
 				EB037F9D2B1CDA5D006E9D45 /* FavoritesPresenter.swift in Sources */,
 				EB037F9B2B1CD9D9006E9D45 /* ProductPresenter.swift in Sources */,

@@ -9,7 +9,9 @@ class AccountViewController: UIViewController, UINavigationControllerDelegate {
     let nameTextField = UITextField()
     let pushSelectImageAction = UIButton(type: .custom)
     let avatar = UIImageView()
-    let myListsTextField = UITextField()
+    let myListsTextField = UIButton()
+    let arrowButton = UIButton()
+    
     
 
     //MARK: - Presenter
@@ -22,6 +24,13 @@ class AccountViewController: UIViewController, UINavigationControllerDelegate {
         view.backgroundColor = .white
         
         initialize()
+        loadUserDefaults()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        safeUserDefaults()
+        
     }
     
      func initialize(){
@@ -39,6 +48,7 @@ class AccountViewController: UIViewController, UINavigationControllerDelegate {
 //        let avatar = UIImageView()
         avatar.image = UIImage(systemName: "person")
         avatar.tintColor = .black
+         avatar.clipsToBounds = true
         avatar.layer.cornerRadius = 50
         view.addSubview(avatar)
         avatar.snp.makeConstraints { make in
@@ -71,16 +81,14 @@ class AccountViewController: UIViewController, UINavigationControllerDelegate {
             nameTextField.placeholder = "Your name"
         }
          
-         myListsTextField.backgroundColor = .lightGray
-         myListsTextField.borderStyle = .roundedRect
-         myListsTextField.delegate = self
-         view.addSubview(myListsTextField)
-         myListsTextField.snp.makeConstraints { make in
-             make.top.equalTo(nameTextField.snp.bottom).offset(20)
-             make.centerX.equalToSuperview()
-             make.horizontalEdges.equalToSuperview().inset(20)
-             myListsTextField.placeholder = "Lists"
+         
+         arrowButton.setTitle("arrowshape.right.cirkle", for: .normal)
+         view.addSubview(arrowButton)
+         arrowButton.snp.makeConstraints { make in
+             
          }
+         
+         
          
     }
     
@@ -111,10 +119,10 @@ extension AccountViewController: UITextFieldDelegate {
         return true
     }
     
-    func listsTextFieldShouldReturn(_ textField: UITextField) -> Bool {
-        myListsTextField.endEditing(true)
-        return true
-    }
+//    func listsTextFieldShouldReturn(_ textField: UITextField) -> Bool {
+//        myListsTextField.endEditing(true)
+//        return true
+//    }
     
 }
 
@@ -135,13 +143,16 @@ extension AccountViewController: UIImagePickerControllerDelegate {
         dismiss(animated: true, completion: nil)
     }
     
-    func applicationDidEnterBackground(_ application: UIApplication) {
+    func safeUserDefaults() {
+        print("cxx")
         guard let image = avatar.image else { return }
         let imageData = image.pngData()
         UserDefaults.standard.set(imageData, forKey: "savedImage")
+        
+        // добавить сохранение имени текстФилда
     }
 
-    func applicationWillEnterForeground(_ application: UIApplication) {
+    func loadUserDefaults() {
         if let imageData = UserDefaults.standard.data(forKey: "savedImage") {
             let image = UIImage(data: imageData)
             avatar.image = image

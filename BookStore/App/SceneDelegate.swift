@@ -18,5 +18,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = Builder.createTabBar()
         window?.makeKeyAndVisible()
     }
+    
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        print("dsd")
+    }
+    
 }
+
+
 
