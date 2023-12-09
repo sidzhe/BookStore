@@ -10,7 +10,7 @@ import Foundation
 // MARK: - BooksDetail
 
 struct BooksDetail: Codable {
-    let description: String?
+    let description: Descript?
     let subjects: [String]?
     let key, title: String?
     let authors: [Author]?
@@ -19,6 +19,48 @@ struct BooksDetail: Codable {
 
     enum CodingKeys: String, CodingKey {
         case description, subjects, key, title, authors, covers, links
+    }
+    
+    enum Descript: Codable {
+        case string(String)
+        case created(Created)
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            if let x = try? container.decode(Created.self) {
+                self = .created(x)
+                return
+            }
+            if let x = try? container.decode(String.self) {
+                self = .string(x)
+                return
+            }
+            throw DecodingError.typeMismatch(Descript.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type"))
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.singleValueContainer()
+            switch self {
+            case .created(let x):
+                try container.encode(x)
+            case .string(let x):
+                try container.encode(x)
+            }
+        }
+        
+        func stringValue() -> String? {
+            if case let .string(value) = self {
+                return value
+            }
+            return nil
+        }
+        
+        func createdValue() -> Created? {
+            if case let .created(value) = self {
+                return value
+            }
+            return nil
+        }
     }
     
     var urlImage: URL? {

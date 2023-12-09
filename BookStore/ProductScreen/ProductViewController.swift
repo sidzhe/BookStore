@@ -101,7 +101,7 @@ private extension ProductViewController {
         productView.category.attributedText = attributedString(from: categoryTitle, nonBoldRange: categoryRange)
         
         productView.imageBook.kf.setImage(with: details.urlImage)
-        productView.booksDescription.text = details.description ?? "none"
+        productView.booksDescription.text = details.description?.stringValue() ?? details.description?.createdValue()?.value ?? "Description is empty, sorry :("
         
         setupNavigationBar()
     }
