@@ -26,6 +26,7 @@ final class NetworkService: NetworkServiceProtocol {
             guard let data = data, error == nil else { return }
             do {
                 let result = try JSONDecoder().decode(TrendBooks.self, from: data)
+                print()
                 completion(.success(result.works))
             } catch {
                 completion(.failure(error))
