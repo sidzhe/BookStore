@@ -26,12 +26,15 @@ struct Books: Codable, Hashable {
 struct Book: Codable, Hashable {
     let key, type: String?
     let seed: [String]?
+    //Название книги?
     let title: String?
     let isbn: [String]?
     let hasFulltext, publicScanB: Bool?
     let ia, iaCollection: [String]?
     let coverI: Int?
+    //Имя автора?
     let authorName: [String]?
+    
 
     enum CodingKeys: String, CodingKey {
         case key, type, title, seed
@@ -48,3 +51,6 @@ struct Book: Codable, Hashable {
         return URL(string: "\(NetworkConstants.imageCover)/\(coverI ?? 0)-M.jpg") ?? URL(fileURLWithPath: "")
     }
 }
+
+
+

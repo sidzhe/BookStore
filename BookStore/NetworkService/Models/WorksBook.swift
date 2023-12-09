@@ -38,14 +38,19 @@ struct WorksBook: Codable {
 
 struct BooksDetail: Codable {
     let description, notes: Created
+    //идентификатор
     let identifiers: Identifiers
+    //название
     let title: String
+    //авторы
     let authors: [TypeElement]
+    //дата публикации
     let publishDate: String
     let publishers, series: [String]
     let pagination: String
-    let publishPlaces, contributions, genres, sourceRecords: [String]
+    let publishPlaces, contributions, genres, sourceRecords: [String] //жанры?
     let workTitles: [String]
+    //язык
     let languages: [TypeElement]
     let subjects: [String]
     let publishCountry, byStatement: String
