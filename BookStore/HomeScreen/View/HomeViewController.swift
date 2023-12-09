@@ -168,7 +168,7 @@ final class HomeViewController: UIViewController {
                 return collectionView.dequeueConfiguredReusableCell(using: timeCellRegistration, for: indexPath, item: item.time!)
             case .topBooks, .recentBooks:
                 // Oбе секции используют BookModel
-                return collectionView.dequeueConfiguredReusableCell(using: bookCellRegistration, for: indexPath, item: item.book)
+                return collectionView.dequeueConfiguredReusableCell(using: bookCellRegistration, for: indexPath, item: item.work)
             }
         }
         
@@ -211,6 +211,12 @@ extension HomeViewController: UISearchBarDelegate {
 //MARK: - HomeViewProtocol
 
 extension HomeViewController: HomeViewProtocol {
+    func openSearchController(with book: [Book]) {
+        let vc = SearchViewController(books: book)
+        vc.modalPresentationStyle = .pageSheet
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
     
     func update() {
         updateWithData()
@@ -241,8 +247,8 @@ extension HomeViewController: HomeViewProtocol {
         
         snapshot.appendSections([.time, .topBooks, .recentBooks])
         let timeItems = presenter.times.map { Item(time: $0) }
-        guard let topBookItems = presenter.topBooks?.compactMap({ Item(book: $0)}),
-              let recentBookItems =  presenter.recentBooks?.compactMap({ Item(book: $0)}) else { return }
+        guard let topBookItems = presenter.topBooks?.compactMap({ Item(work: $0)}),
+              let recentBookItems =  presenter.recentBooks?.compactMap({ Item(work: $0)}) else { return }
         snapshot.appendItems(timeItems, toSection: .time)
         snapshot.appendItems(topBookItems, toSection: .topBooks)
         snapshot.appendItems(recentBookItems, toSection: .recentBooks)

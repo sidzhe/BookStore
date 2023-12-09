@@ -8,4 +8,5 @@
 import Foundation
 struct TimeModel: Hashable {
     var times: String
+    var isSelected: Bool = false
 }

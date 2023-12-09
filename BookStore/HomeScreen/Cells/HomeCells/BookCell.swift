@@ -69,7 +69,7 @@ final class BookCell: UICollectionViewCell {
         if let title = book.title {
             self.bookName.text = limitWords(toFive: title)
         }
-        self.author.text = book.author_name?.first
+        self.author.text = book.authorName?.first
         self.bookImage.kf.setImage(with: book.urlImage)
 
     }

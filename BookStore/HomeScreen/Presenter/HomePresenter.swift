@@ -11,12 +11,14 @@ import Foundation
 protocol HomeViewProtocol: AnyObject {
     func updateCellAppearance(at indexPath: IndexPath, isSelected: Bool)
     func update()
+    func openSearchController(with book: [Book])
 }
 
 protocol HomePresenterProtocol: AnyObject {
     var topBooks: [Work]? { get }
     var recentBooks: [Work]? { get }
     var times: [TimeModel] { get }
+    var searhedBook: [Book]? { get }
     func didTextChange(_ text: String)
     func didTapSearchButton(_ text: String)
     func didSelectItemAt(_ indexPath: IndexPath)
@@ -33,6 +35,7 @@ final class HomePresenter: HomePresenterProtocol {
         
     var topBooks: [Work]?
     var recentBooks: [Work]?
+    var searhedBook: [Book]?
     var times = [TimeModel(times: "This Week"), TimeModel(times: "This Month"), TimeModel(times: "This Year")]
     
     //MARK: - Init
@@ -94,7 +97,24 @@ final class HomePresenter: HomePresenterProtocol {
     }
     
     func didTapSearchButton(_ text: String) {
-        print(text)
+        networkService.searchBooks(keyWords: text) { (result: Result<Books, Error>) in
+            print("Запрос ушел с текстом - \(text)")
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let book):
+                    print("ответ пришел")
+                    if let book = book.books {
+                        self.searhedBook = book
+                    }
+                    if let searhedBook = self.searhedBook {
+                        self.view?.openSearchController(with: searhedBook)
+                    }
+                case .failure(let error):
+                    print(error.localizedDescription)
+                    
+                }
+            }
+        }
     }
     
 //    func topBooksRequest() {
