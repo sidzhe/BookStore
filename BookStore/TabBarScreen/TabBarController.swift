@@ -40,13 +40,24 @@ final class TabBarController: UITabBarController, TabBarViewProtocol {
     
     //MARK: - SetupTabBar
     private func setupTabBar() {
+//        let appearance = UITabBarAppearance()
+//        appearance.configureWithOpaqueBackground()
+//        appearance.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+//        appearance.stackedLayoutAppearance.normal.iconColor = .black
+//        appearance.stackedLayoutAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
+//        appearance.selectionIndicatorTintColor = .red
+//        UITabBar.appearance().tintColor = appearance.selectionIndicatorTintColor
+//        tabBar.scrollEdgeAppearance = appearance
+//        tabBar.tintColor = .black
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        appearance.backgroundColor = .white
+        appearance.selectionIndicatorTintColor = .purple
         appearance.stackedLayoutAppearance.normal.iconColor = .black
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
-        tabBar.scrollEdgeAppearance = appearance
-        tabBar.tintColor = .black
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+        UITabBar.appearance().tintColor = appearance.selectionIndicatorTintColor
     }
     
     

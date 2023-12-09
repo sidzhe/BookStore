@@ -7,6 +7,12 @@
 
 import Foundation
 
+struct BookModel: Hashable {
+    let genre: String
+    let bookName: String
+    let author: String
+}
+
 //MARK: - Protocols
 protocol FavoritesViewProtocol: AnyObject {
     //Удаление ячейки

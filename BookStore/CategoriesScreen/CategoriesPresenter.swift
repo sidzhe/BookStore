@@ -13,7 +13,10 @@ protocol CategoriesViewProtocol: AnyObject {
 }
 
 protocol CategoriesPresenterProtocol: AnyObject {
+    var currentText: String? { get set }
+    var categoriesModel: [String] { get }
     init(view: CategoriesViewProtocol)
+    func filteredPairs(with filter: String?) -> [String] 
 }
 
 //MARK: - CategoriesPresenter
@@ -21,9 +24,18 @@ final class CategoriesPresenter: CategoriesPresenterProtocol {
     
     //MARK: - Properties
     weak var view: CategoriesViewProtocol?
+    var currentText: String?
+    var categoriesModel = ["Non-fiction", "Classic", "Fantasy", "Young adult", "Crime", "Horror", "Sci-fi", "Drama", "Comedy", "Adventure", "Love", "History", "Another"]
     
     //MARK: - Init
     required init(view: CategoriesViewProtocol) {
         self.view = view
+    }
+    
+    //MARK: - Methods
+    func filteredPairs(with filter: String?) -> [String] {
+        guard let filter = filter, !filter.isEmpty else { return categoriesModel }
+        let data = categoriesModel.filter({ $0.contains(filter) })
+        return data
     }
 }

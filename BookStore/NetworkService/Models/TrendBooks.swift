@@ -16,21 +16,16 @@ struct TrendBooks: Codable, Hashable {
 
 // MARK: - Work
 struct Work: Codable, Hashable {
-    //название
     let key, title: String?
-    let editionCount, firstPublishYear: Int?
-    let hasFulltext, publicScanB: Bool?
-    let ia: [String]?
-    let ia_collection_s, coverEditionKey: String?
+    let coverEditionKey: String?
     let cover_i: Int?
-    //язык, ключ автора, имя автора
-    let language, authorKey, author_name: [String]?
-    let lendingEditionS, lendingIdentifierS, subtitle: String?
-    let idLibrivox, idProjectGutenberg, idStandardEbooks: [String]?
+    let authorName: [String]?
     
+    enum CodingKeys: String, CodingKey {
+        case key, title, coverEditionKey = "cover_edition_key", authorName = "author_name", cover_i
+    }
 
     var urlImage: URL {
         return URL(string: "\(NetworkConstants.imageCover)/\(cover_i ?? 0)-M.jpg") ?? URL(fileURLWithPath: "")
     }
-    
 }

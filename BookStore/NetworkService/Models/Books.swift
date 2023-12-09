@@ -9,16 +9,29 @@ import Foundation
 
 // MARK: - Books
 struct Books: Codable, Hashable {
-    let numFound, start: Int?
-    let numFoundExact: Bool?
-    let docs: [Book]?
-    let booksNumFound: Int?
-    let q: String?
+//    let numFound, start: Int?
+//    let numFoundExact: Bool?
+    let books: [Book]?
+//    let booksNumFound: Int?
+//    let q: String?
 
     enum CodingKeys: String, CodingKey {
-        case numFound, start, numFoundExact, docs
-        case booksNumFound = "num_found"
-        case q
+//        case numFound, start, numFoundExact, 
+        case books = "docs"
+//        case booksNumFound = "num_found"
+//        case q
+    }
+}
+
+struct BooksByCategories: Codable {
+    let key, name: String?
+    let workCount: Int?
+    let works: [Work]
+
+    enum CodingKeys: String, CodingKey {
+        case key, name
+        case workCount = "work_count"
+        case works
     }
 }
 
@@ -28,8 +41,8 @@ struct Book: Codable, Hashable {
     let seed: [String]?
     //Название книги?
     let title: String?
-    let isbn: [String]?
-    let hasFulltext, publicScanB: Bool?
+//    let isbn: [String]?
+//    let hasFulltext, publicScanB: Bool?
     let ia, iaCollection: [String]?
     let coverI: Int?
     //Имя автора?
@@ -38,9 +51,9 @@ struct Book: Codable, Hashable {
 
     enum CodingKeys: String, CodingKey {
         case key, type, title, seed
-        case isbn
-        case hasFulltext = "has_fulltext"
-        case publicScanB = "public_scan_b"
+//        case isbn
+//        case hasFulltext = "has_fulltext"
+//        case publicScanB = "public_scan_b"
         case ia
         case iaCollection = "ia_collection"
         case coverI = "cover_i"

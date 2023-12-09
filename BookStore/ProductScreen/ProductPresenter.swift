@@ -9,18 +9,20 @@ import Foundation
 
 //MARK: - Protocols
 protocol ProductViewProtocol: AnyObject {
-    func success()
+    func setDetail()
     func failure(error: Error)
 }
 
 protocol ProductPresenterProtocol: AnyObject {
     var details: BooksDetail? { get set }
     var rating: Double? { get set }
+    var book: Work? { get set }
     
-    init(view: ProductViewProtocol, networkService: NetworkServiceProtocol)
+    init(view: ProductViewProtocol, networkService: NetworkServiceProtocol, book: Work)
     func didTapAddToListButton()
     func didTapReadButton()
-    func getDetail()
+    func didTapLikeButton()
+    func setDetail()
 }
 
 //MARK: - ProductPresenter
@@ -30,19 +32,22 @@ final class ProductPresenter {
     weak var view: ProductViewProtocol?
     let networkService: NetworkServiceProtocol
     var details: BooksDetail?
+    var book: Work?
     var rating: Double?
     
     //MARK: - Init
     
-    required init(view: ProductViewProtocol, networkService: NetworkServiceProtocol) {
+    required init(view: ProductViewProtocol, networkService: NetworkServiceProtocol, book: Work) {
         self.view = view
         self.networkService = networkService
-        
-        getDetail()
+        self.book = book
     }
 }
 
 extension ProductPresenter: ProductPresenterProtocol {
+    func didTapLikeButton() {
+        print("Like")
+    }
     
     func didTapAddToListButton() {
         print("Add to list")
@@ -52,15 +57,15 @@ extension ProductPresenter: ProductPresenterProtocol {
         print("Read")
     }
     
-    func getDetail() {
-        networkService.getDetailBook(key: "/books/OL22927024M") { [weak self] result in
+    func setDetail() {
+        networkService.getDetailBook(key: book?.key ?? "") { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {
                 case .success(let details):
                     self.details = details
                     self.getRating()
-                    self.view?.success()
+                    self.view?.setDetail()
                 case .failure(let error):
                     print(error.localizedDescription)
                     self.view?.failure(error: error)
@@ -70,13 +75,13 @@ extension ProductPresenter: ProductPresenterProtocol {
     }
     
     func getRating() {
-        networkService.getRating(works: details?.works[0].key ?? "") { [weak self] result in
+        networkService.getRating(works: book?.key ?? "") { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {
                 case .success(let rating):
                     self.rating = rating.summary.average
-                    self.view?.success()
+                    self.view?.setDetail()
                 case .failure(let error):
                     print(error.localizedDescription)
                     self.view?.failure(error: error)

@@ -34,13 +34,15 @@ final class ProductViewController: UIViewController {
         
         productView.addToListButton.addTarget(self, action: #selector(addToListButtonTapped), for: .touchUpInside)
         productView.readButton.addTarget(self, action: #selector(readButtonTapped), for: .touchUpInside)
+        
+        presenter.setDetail()
+        setupNavigationBar()
     }
 }
 
-
 //MARK: - ProductViewProtocol
 extension ProductViewController: ProductViewProtocol {
-    func success() {
+    func setDetail() {
         guard let details = presenter.details else { return }
         configure(details: details)
         guard let rating = presenter.rating else { return }
@@ -62,6 +64,10 @@ private extension ProductViewController {
         presenter.didTapReadButton()
     }
     
+    @objc func likeButtonTapped() {
+        presenter.didTapLikeButton()
+    }
+    
     func attributedString(from string: String, nonBoldRange: NSRange?) -> NSAttributedString {
         let boldAttribute = [
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .semibold),
@@ -77,15 +83,15 @@ private extension ProductViewController {
     }
     
     func configureRating(rating: Double) {
-        let ratingTitle = "Rating : " + String(describing: rating) + "/5"
+        let ratingTitle = "Rating : " + String(format: "%.02f", rating) + "/5"
         let ratingRange = NSMakeRange(0, "Rating :".count)
         productView.rating.attributedText = attributedString(from: ratingTitle, nonBoldRange: ratingRange)
     }
     
     func configure(details: BooksDetail) {
         productView.booksName.text = details.title
-        let authorTitle = "Author : " + details.byStatement
-        let categoryTitle = "Category : " + details.genres[0]
+        let authorTitle = "Author : " + (presenter.book?.authorName?.first ?? "none")
+        let categoryTitle = "Category : " + (details.subjects?.first ?? "none")
         
         
         let authorRange = NSMakeRange(0, "Author :".count)
@@ -95,17 +101,16 @@ private extension ProductViewController {
         productView.category.attributedText = attributedString(from: categoryTitle, nonBoldRange: categoryRange)
         
         productView.imageBook.kf.setImage(with: details.urlImage)
-        productView.booksDescription.text = details.description.value
+        productView.booksDescription.text = details.description?.stringValue() ?? details.description?.createdValue()?.value ?? "Description is empty, sorry :("
+        
+        setupNavigationBar()
     }
-}
-
-//MARK: - UIView Extension
-
-extension UIView {
-    func disableSubviewsTamic() {
-        subviews.forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
-    }
-    func addSubviews(_ views: UIView...) {
-        views.forEach(addSubview(_:))
+    
+    func setupNavigationBar() {
+        setNavigation(title: presenter?.details?.subjects?.first ?? "")
+        
+        let button = UIBarButtonItem(image: UIImage(systemName: "heart"), style: .plain, target: self, action: #selector(likeButtonTapped))
+        button.tintColor = .black
+        navigationItem.rightBarButtonItem = button
     }
 }
