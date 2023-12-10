@@ -38,9 +38,12 @@ final class NetworkService: NetworkServiceProtocol {
     
     ///Search
     func searchBooks(keyWords: String, completion: @escaping (Result<Books, Error>) -> Void) {
-        let keyWordsReplace = keyWords.replacingOccurrences(of: " ", with: "+")
-        guard let url = URL(string: NetworkConstants.baseUrl + Endpoint.search.rawValue + keyWordsReplace) else { return }
-        print(url)
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "openlibrary.org"
+        components.path = "/search.json"
+        components.queryItems = [URLQueryItem(name: "q", value: "\(keyWords)"), URLQueryItem(name: "limit", value: "10")]
+        guard let url = components.url else { return }
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
             guard let data = data, error == nil else { return }
             do {
@@ -51,6 +54,19 @@ final class NetworkService: NetworkServiceProtocol {
             }
         }
         task.resume()
+//        let keyWordsReplace = keyWords.replacingOccurrences(of: " ", with: "+")
+//        guard let url = URL(string: NetworkConstants.baseUrl + Endpoint.search.rawValue + keyWordsReplace) else { return }
+//        print(url)
+//        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
+//            guard let data = data, error == nil else { return }
+//            do {
+//                let results = try JSONDecoder().decode(Books.self, from: data)
+//                completion(.success(results))
+//            } catch {
+//                completion(.failure(error))
+//            }
+//        }
+//        task.resume()
     }
     
     ///Rating
