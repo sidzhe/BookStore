@@ -54,19 +54,6 @@ final class NetworkService: NetworkServiceProtocol {
             }
         }
         task.resume()
-//        let keyWordsReplace = keyWords.replacingOccurrences(of: " ", with: "+")
-//        guard let url = URL(string: NetworkConstants.baseUrl + Endpoint.search.rawValue + keyWordsReplace) else { return }
-//        print(url)
-//        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
-//            guard let data = data, error == nil else { return }
-//            do {
-//                let results = try JSONDecoder().decode(Books.self, from: data)
-//                completion(.success(results))
-//            } catch {
-//                completion(.failure(error))
-//            }
-//        }
-//        task.resume()
     }
     
     ///Rating

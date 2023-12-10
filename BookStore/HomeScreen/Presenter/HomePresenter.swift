@@ -12,6 +12,7 @@ protocol HomeViewProtocol: AnyObject {
     func updateCellAppearance(at indexPath: IndexPath, isSelected: Bool)
     func update()
     func openSearchController(with text: String)
+    func animatig(_ start: Bool)
 }
 
 protocol HomePresenterProtocol: AnyObject {
@@ -42,7 +43,6 @@ final class HomePresenter: HomePresenterProtocol {
     required init(view: HomeViewProtocol, networkService: NetworkServiceProtocol) {
         self.view = view
         self.networkService = networkService
-//        topBooksRequest()
         timeBookRequest(sort: .daily) {
             self.view?.update()
         }
@@ -96,49 +96,23 @@ final class HomePresenter: HomePresenterProtocol {
     func didTextChange(_ text: String) {
     }
     
-    
+    //MARK: - SearchButton action
     func didTapSearchButton(_ text: String) {
         print("Текст передан контроллеру из презентора - \(text)")
         view?.openSearchController(with: text)
     }
     
-//    func topBooksRequest() {
-//        networkService.searchBooks(keyWords: "гарри") { [weak self] (result: Result<Books, Error>) in
-//            switch result {
-//            case .success(let book):
-//                self?.recentBooks = book.docs
-////                self?.topBooks = book.docs
-//                self?.view?.update()
-//            case .failure(let error):
-//                print(error.localizedDescription)
-//            }
-//        }
-//    }
-    
+    //MARK: - Network Requeest
     func timeBookRequest(sort: TrendingSort, completion: @escaping () -> Void) {
+        view?.animatig(true)
         networkService.getTrendingBooks(sort: sort) { [weak self] (result: Result<[Work], Error>) in
             DispatchQueue.main.async {
                 switch result {
-                    
                 case .success(let trendBooks):
                     self?.topBooks = trendBooks
                     self?.recentBooks = trendBooks
                     print(trendBooks[0].cover_i)
-//                    print(self.!recentBooks![0].coverI)
-//                    self?.topBooks = trendBooks.map { Book(
-//                        key: $0.key,
-//                        type: nil,
-//                        seed: nil,
-//                        title: $0.title,
-//                        isbn: nil,
-//                        hasFulltext: $0.hasFulltext,
-//                        publicScanB: $0.publicScanB,
-//                        ia: $0.ia,
-//                        iaCollection: nil,
-//                        coverI: $0.coverI,
-//                        authorName: $0.authorName
-//                    )}
-//                    // Преобразование Work в Book
+                    self?.view?.animatig(false)
                     self?.view?.update()
                 case .failure(let error):
                     print(error.localizedDescription)

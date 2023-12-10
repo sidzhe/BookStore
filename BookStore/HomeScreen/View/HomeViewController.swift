@@ -15,15 +15,20 @@ final class HomeViewController: UIViewController {
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private let image = UIImage(named: "book")!
     private let searchController = UISearchController(searchResultsController: nil)
+    private let activityIndicator = UIActivityIndicatorView(style: .large)
+    private let waitLabel = UILabel(font: .systemFont(ofSize: 30), textColor: .label)
+    private var waitLabelcenterYConstraint: NSLayoutConstraint!
+    private var animator = UIViewPropertyAnimator()
     var presenter: HomePresenterProtocol!
     
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        configureActivityIndicator()
         configureCollectionView()
         configureDataSource()
         setupSearchController()
+        
         
     }
     
@@ -53,6 +58,25 @@ final class HomeViewController: UIViewController {
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+    
+    //MARK: - ActivityIndicator & WaitLabel
+    private func configureActivityIndicator() {
+        view.addSubViews(activityIndicator, waitLabel)
+        activityIndicator.startAnimating()
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.color = .label
+        waitLabel.text = "Ожидайте"
+        
+        waitLabelcenterYConstraint = waitLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 30)
+        
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            waitLabelcenterYConstraint,
+            waitLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
     
@@ -208,9 +232,48 @@ extension HomeViewController: UISearchBarDelegate {
     }
 }
 
+
 //MARK: - HomeViewProtocol
 
 extension HomeViewController: HomeViewProtocol {
+    
+    func animatig(_ start: Bool) {
+        DispatchQueue.main.async {
+            start ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
+            if start {
+                self.downAndUpLabel()
+            } else {
+                self.animator.stopAnimation(true)
+                self.animator.finishAnimation(at: .current)
+                self.waitLabel.isHidden = true
+            }
+        }
+    }
+    
+    //MARK: - LabelAnimation
+    private func downAndUpLabel() {
+        self.animator = UIViewPropertyAnimator(duration: 2.0, curve: .linear, animations: {
+            UIView.animateKeyframes(withDuration: 2.0, delay: 0) {
+                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) {
+                    self.waitLabelcenterYConstraint.constant = 70
+                    self.view.layoutIfNeeded()
+                }
+                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5) {
+                    self.waitLabelcenterYConstraint.constant = 30
+                    self.view.layoutIfNeeded()
+                }
+            }
+            self.animator.addCompletion { position in
+                if position == .end {
+                    self.downAndUpLabel()
+                }
+                    
+            }
+        })
+        self.animator.startAnimation()
+    }
+
+    //MARK: - Open SearchController
     func openSearchController(with text: String) {
         let vc = Builder.createSearchVC(with: text)
         print("Текст передан презентору из контроллера - \(text)")

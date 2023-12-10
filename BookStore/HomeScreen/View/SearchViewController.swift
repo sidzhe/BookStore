@@ -13,6 +13,7 @@ final class SearchViewController: UIViewController {
         layout.itemSize = CGSize(width: 320, height: 142)
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
     }()    
+    private let activityIndicator = UIActivityIndicatorView(style: .large)
     var presenter: SearchPresenterProtocol!
     
     
@@ -26,12 +27,21 @@ final class SearchViewController: UIViewController {
         view.backgroundColor = .white
         
     }
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+//            self.activityIndicator.stopAnimating()
+//        }
+//    }
     
     private func register() {
         collectionView.register(SearchCell.self, forCellWithReuseIdentifier: SearchCell.identifier)
     }
     private func setupView() {
-        view.addSubViews(collectionView)
+        view.addSubViews(collectionView, activityIndicator)
+        activityIndicator.color = .label
+        activityIndicator.startAnimating()
+        activityIndicator.hidesWhenStopped = true
     }
     private func setupConst() {
         NSLayoutConstraint.activate([
@@ -39,6 +49,9 @@ final class SearchViewController: UIViewController {
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
 }
@@ -72,6 +85,12 @@ extension SearchViewController: UICollectionViewDataSource {
 }
 
 extension SearchViewController: SearchViewProtocol {
+    func animating(_ start: Bool) {
+        DispatchQueue.main.async {
+            start ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
+        }
+    }
+    
 
     
     func reloadData() {

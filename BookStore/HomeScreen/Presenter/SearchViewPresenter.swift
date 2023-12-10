@@ -5,6 +5,7 @@ import Foundation
 protocol SearchViewProtocol: AnyObject {
     //Обновление UI коллекции
     func reloadData()
+    func animating(_ start: Bool)
 }
 
 protocol SearchPresenterProtocol: AnyObject {
@@ -36,6 +37,7 @@ final class SearchPresenter: SearchPresenterProtocol {
         print("запроc ушел")
         networkService.searchBooks(keyWords: text) { (result: Result<Books, Error>) in
             print("Запрос ушел с текстом - \(text)")
+            self.view?.animating(true)
             DispatchQueue.main.async {
                 switch result {
                 case .success(let book):
@@ -43,8 +45,9 @@ final class SearchPresenter: SearchPresenterProtocol {
                     if let books = book.books {
                         self.books = self.tenthElement(books)
                     }
-//                    self.books = tenthElement(book.books)
+                    self.view?.animating(false)
                     self.view?.reloadData()
+                    
                     if let books = self.books {
                         print(books[0].authorName)
                     }
