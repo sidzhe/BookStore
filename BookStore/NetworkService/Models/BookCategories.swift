@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum BookCategories: String {
+enum BookCategories: String, CaseIterable {
     case nonFiction = "Non-fiction"
     case classic = "Classic"
     case fantasy = "Fantasy"

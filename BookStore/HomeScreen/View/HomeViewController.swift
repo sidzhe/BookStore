@@ -239,7 +239,6 @@ extension HomeViewController: HomeViewProtocol {
         snapshot.appendItems(recentBookItems, toSection: .recentBooks)
         dataSource.apply(snapshot, animatingDifferences: true)
     }
-    
 }
 
 //MARK: - UICollectionView Delegate

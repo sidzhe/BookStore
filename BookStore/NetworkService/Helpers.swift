@@ -8,19 +8,20 @@
 import Foundation
 
 enum NetworkConstants {
-    static let baseUrl = "https://openlibrary.org"
+    static let scheme = "https"
+    static let baseUrl = "openlibrary.org"
     static let imageCover = "https://covers.openlibrary.org/b/id"
 }
 
 enum Endpoint: String {
-    case search = "/search.json?q="
+    case search = "/search.json"
     case trending = "/trending"
     case ratings = "/ratings"
     case subjects = "/subjects"
 }
 
 enum TrendingSort: String {
-    case daily = "/daily"
-    case weekly = "/weekly"
-    case monthly = "/monthly"
+    case daily = "daily"
+    case weekly = "weekly"
+    case monthly = "monthly"
 }

@@ -25,7 +25,7 @@ final class CategoriesPresenter: CategoriesPresenterProtocol {
     //MARK: - Properties
     weak var view: CategoriesViewProtocol?
     var currentText: String?
-    var categoriesModel = ["Non-fiction", "Classic", "Fantasy", "Young adult", "Crime", "Horror", "Sci-fi", "Drama", "Comedy", "Adventure", "Love", "History", "Another"]
+    var categoriesModel = BookCategories.allCases.map { $0.rawValue }
     
     //MARK: - Init
     required init(view: CategoriesViewProtocol) {

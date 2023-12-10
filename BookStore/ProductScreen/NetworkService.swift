@@ -22,8 +22,14 @@ final class NetworkService: NetworkServiceProtocol {
     
     ///Trending
     func getTrendingBooks(sort: TrendingSort, completion: @escaping (Result<[Work], Error>) -> Void) {
-        guard let url = URL(string: NetworkConstants.baseUrl + Endpoint.trending.rawValue + sort.rawValue + ".json") else { return }
-        print(url)
+        var components = URLComponents()
+        components.scheme = NetworkConstants.scheme
+        components.host = NetworkConstants.baseUrl
+        components.path = "/trending/\(sort.rawValue).json"
+        components.queryItems = [URLQueryItem(name: "limit", value: "10")]
+        
+        guard let url = components.url else { return }
+        
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
             guard let data = data, error == nil else { return }
             do {
@@ -38,9 +44,14 @@ final class NetworkService: NetworkServiceProtocol {
     
     ///Search
     func searchBooks(keyWords: String, completion: @escaping (Result<Books, Error>) -> Void) {
-        let keyWordsReplace = keyWords.replacingOccurrences(of: " ", with: "+")
-        guard let url = URL(string: NetworkConstants.baseUrl + Endpoint.search.rawValue + keyWordsReplace) else { return }
-        print(url)
+        var components = URLComponents()
+        components.scheme = NetworkConstants.scheme
+        components.host = NetworkConstants.baseUrl
+        components.path = Endpoint.search.rawValue
+        components.queryItems = [URLQueryItem(name: "q", value: "\(keyWords)"), URLQueryItem(name: "limit", value: "10")]
+        
+        guard let url = components.url else { return }
+        
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
             guard let data = data, error == nil else { return }
             do {

@@ -62,7 +62,7 @@ final class HomePresenter: HomePresenterProtocol {
     }
     
     func topBooksRequest() {
-        networkService.searchBooks(keyWords: "гарри") { [weak self] (result: Result<Books, Error>) in
+        networkService.searchBooks(keyWords: "war") { [weak self] (result: Result<Books, Error>) in
             switch result {
             case .success(let book):
                 self?.recentBooks = book.books
