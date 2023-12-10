@@ -13,7 +13,7 @@ protocol NetworkServiceProtocol {
     func getTrendingBooks(sort: TrendingSort, completion: @escaping (Result<[Work], Error>) -> Void)
     func getRating(works: String, completion: @escaping (Result<Rating, Error>) -> Void)
     func getDetailBook(key: String, completion: @escaping (Result<BooksDetail, Error>) -> Void)
-    func getBooksByCategories(category: BookCategories, completion: @escaping (Result<[Work], Error>) -> Void)
+    func getBooksByCategories(category: String, completion: @escaping (Result<[Work], Error>) -> Void)
 }
 
 
@@ -66,7 +66,13 @@ final class NetworkService: NetworkServiceProtocol {
     
     ///Rating
     func getRating(works: String, completion: @escaping (Result<Rating, Error>) -> Void) {
-        guard let url = URL(string: NetworkConstants.baseUrl + works + Endpoint.ratings.rawValue + ".json") else { return }
+        var components = URLComponents()
+        components.scheme = NetworkConstants.scheme
+        components.host = NetworkConstants.baseUrl
+        components.path = "/\(works)/ratings.json"
+        
+        guard let url = components.url else { return }
+        
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
             guard let data = data, error == nil else { return }
             do {
@@ -82,7 +88,12 @@ final class NetworkService: NetworkServiceProtocol {
     ///Detail
     
     func getDetailBook(key: String, completion: @escaping (Result<BooksDetail, Error>) -> Void) {
-        guard let url = URL(string: NetworkConstants.baseUrl + key + ".json") else { return }
+        var components = URLComponents()
+        components.scheme = NetworkConstants.scheme
+        components.host = NetworkConstants.baseUrl
+        components.path = "/\(key).json"
+        
+        guard let url = components.url else { return }
         print(url)
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data,_, error in
             guard let data = data, error == nil else { return }
@@ -97,9 +108,14 @@ final class NetworkService: NetworkServiceProtocol {
     }
     
     ///Categories
-    func getBooksByCategories(category: BookCategories, completion: @escaping (Result<[Work], Error>) -> Void) {
-        guard let url = URL(string: NetworkConstants.baseUrl + Endpoint.subjects.rawValue + category.rawValue + ".json") else { return }
-        print(url)
+    func getBooksByCategories(category: String, completion: @escaping (Result<[Work], Error>) -> Void) {
+        var components = URLComponents()
+        components.scheme = NetworkConstants.scheme
+        components.host = NetworkConstants.baseUrl
+        components.path = "/subjects/\(category).json"
+        components.queryItems = [URLQueryItem(name: "limit", value: "10")]
+        
+        guard let url = components.url else { return }
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data,_, error in
             guard let data = data, error == nil else { return }
             do {

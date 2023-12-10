@@ -39,7 +39,8 @@ final class Builder {
     ///CategoriesVC
     static func createCategoriesVC() -> UIViewController {
         let view = CategoriesViewController()
-        let presenter = CategoriesPresenter(view: view)
+        let networkService = NetworkService()
+        let presenter = CategoriesPresenter(view: view, netwrokService: networkService)
         view.presenter = presenter
         return view
     }

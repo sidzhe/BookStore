@@ -8,13 +8,19 @@
 import UIKit
 
 final class HeaderCell: UICollectionReusableView {
+    
+    //MARK: - Properties
     let label = UILabel()
-    static let reuseIdentifier = "title-supplementary-reuse-identifier"
 
+    
+    //MARK: - Inits
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         configure()
+        
     }
+    
     required init?(coder: NSCoder) {
         fatalError()
     }
@@ -22,6 +28,7 @@ final class HeaderCell: UICollectionReusableView {
 
 extension HeaderCell {
     func configure() {
+        label.backgroundColor = .white
         addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.adjustsFontForContentSizeCategory = true

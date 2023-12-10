@@ -19,8 +19,9 @@ final class CategoriesViewController: UIViewController {
         let searchBar = UISearchController(searchResultsController: nil)
         searchBar.searchBar.delegate = self
         searchBar.obscuresBackgroundDuringPresentation = false
-        searchBar.searchBar.placeholder = "Category..."
+        searchBar.searchBar.placeholder = "Search category"
         searchBar.searchBar.searchTextField.clearButtonMode = .always
+        searchBar.automaticallyShowsCancelButton = false
         return searchBar
     }()
     
@@ -55,6 +56,8 @@ private extension CategoriesViewController {
             var backgroundContent = UIBackgroundConfiguration.listGroupedCell()
             backgroundContent.image = UIImage(named: "cellBack")
             cell.backgroundConfiguration = backgroundContent
+            cell.clipsToBounds = true
+            cell.layer.cornerRadius = 5
             content.text = str
             content.textProperties.alignment = .center
             content.textProperties.font = .systemFont(ofSize: 22, weight: .semibold)
@@ -103,8 +106,6 @@ private extension CategoriesViewController {
                                                                             elementKind: "Header",
                                                                             alignment: .top)
             section.boundarySupplementaryItems = [sectionHeader]
-            let layout = UICollectionViewCompositionalLayout(section: section)
-            
             return section
         }
         
@@ -145,6 +146,7 @@ extension CategoriesViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = presenter.categoriesModel[indexPath.row]
         print(item.lowercased())
+        presenter.requestCategorise(item.lowercased())
     }
 }
 
