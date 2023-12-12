@@ -1,13 +1,13 @@
 //
-//  favouriteCell.swift
+//  SearchCell.swift
 //  BookStore
 //
-//  Created by macbook on 05.12.2023.
+//  Created by macbook on 09.12.2023.
 //
 
 import UIKit
 
-final class FavouriteCell: UICollectionViewCell {
+final class SearchCell: UICollectionViewCell {
     
     private let bookImage = UIImageView()
     private let button = UIButton()
@@ -63,11 +63,11 @@ final class FavouriteCell: UICollectionViewCell {
         ])
     }
     
-    func config(book: BookModel, image: UIImage) {
-        self.genre.text = book.genre
-        self.bookName.text = book.bookName
-        self.author.text = book.author
-        self.bookImage.image = image
+    func config(book: Book) {
+        self.genre.text = book.iaCollection?.first
+        self.bookName.text = book.title
+        self.author.text = book.authorName?.first
+        self.bookImage.kf.setImage(with: book.urlImage)
     }
 
     @objc private func deleteButtonAction() {

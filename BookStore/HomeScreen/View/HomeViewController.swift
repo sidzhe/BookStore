@@ -15,15 +15,20 @@ final class HomeViewController: UIViewController {
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private let image = UIImage(named: "book")!
     private let searchController = UISearchController(searchResultsController: nil)
-    var presenter: HomePresenter!
+    private let activityIndicator = UIActivityIndicatorView(style: .large)
+    private let waitLabel = UILabel(font: .systemFont(ofSize: 30), textColor: .label)
+    private var waitLabelcenterYConstraint: NSLayoutConstraint!
+    private var animator = UIViewPropertyAnimator()
+    var presenter: HomePresenterProtocol!
     
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        configureActivityIndicator()
         configureCollectionView()
         configureDataSource()
         setupSearchController()
+        
         
     }
     
@@ -53,6 +58,25 @@ final class HomeViewController: UIViewController {
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+    
+    //MARK: - ActivityIndicator & WaitLabel
+    private func configureActivityIndicator() {
+        view.addSubViews(activityIndicator, waitLabel)
+        activityIndicator.startAnimating()
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.color = .label
+        waitLabel.text = "Ожидайте"
+        
+        waitLabelcenterYConstraint = waitLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 30)
+        
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            waitLabelcenterYConstraint,
+            waitLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
     
@@ -107,7 +131,7 @@ final class HomeViewController: UIViewController {
                 
                 section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .continuous
-                
+
                 let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
                 let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
                 header.pinToVisibleBounds = false
@@ -124,18 +148,13 @@ final class HomeViewController: UIViewController {
     private func registerTime() -> UICollectionView.CellRegistration<TimeCell, TimeModel> {
         return UICollectionView.CellRegistration<TimeCell, TimeModel> { (cell, indexPath, timeModel) in
             cell.config(with: timeModel)
+            cell.color(timeModel.isSelected ? .black : .clear)
         }
     }
     
-    private func registerBook() -> UICollectionView.CellRegistration<BookCell, Book> {
-        return UICollectionView.CellRegistration<BookCell, Book> { (cell, indexPath, bookModel) in
-            cell.config(book: bookModel, image: self.image)
-        }
-    }
-    
-    private func registerTopBook() -> UICollectionView.CellRegistration<TopCell, Work> {
-        return UICollectionView.CellRegistration<TopCell, Work> { (cell, indexPath, work) in
-            cell.config(book: work)
+    private func registerBook() -> UICollectionView.CellRegistration<BookCell, Work> {
+        return UICollectionView.CellRegistration<BookCell, Work> { (cell, indexPath, bookModel) in
+            cell.config(book: bookModel)
         }
     }
     
@@ -153,11 +172,16 @@ final class HomeViewController: UIViewController {
     
     //MARK: - DataSource
     private func configureDataSource() {
-        
+        // Регистрация для TimeCell
         let timeCellRegistration = registerTime()
+        
+        // Регистрация для BookCell
         let bookCellRegistration = registerBook()
-        let bookCellTopRegistration = registerTopBook()
+        
+        // Регистрация для Top Books Header
         let topBooksHeader = registerTopHeader()
+        
+        // Регистрация для Recent Books Header
         let recentBooksHeader = registerRecentHeader()
         
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) {
@@ -166,11 +190,9 @@ final class HomeViewController: UIViewController {
             switch Section(rawValue: indexPath.section)! {
             case .time:
                 return collectionView.dequeueConfiguredReusableCell(using: timeCellRegistration, for: indexPath, item: item.time!)
-            case .topBooks:
-                return collectionView.dequeueConfiguredReusableCell(using: bookCellTopRegistration, for: indexPath, item: item.work!)
-            case .recentBooks:
+            case .topBooks, .recentBooks:
                 // Oбе секции используют BookModel
-                return collectionView.dequeueConfiguredReusableCell(using: bookCellRegistration, for: indexPath, item: item.book)
+                return collectionView.dequeueConfiguredReusableCell(using: bookCellRegistration, for: indexPath, item: item.work)
             }
         }
         
@@ -210,11 +232,57 @@ extension HomeViewController: UISearchBarDelegate {
     }
 }
 
+
 //MARK: - HomeViewProtocol
 
 extension HomeViewController: HomeViewProtocol {
+    
+    func animatig(_ start: Bool) {
+        DispatchQueue.main.async {
+            start ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
+            if start {
+                self.downAndUpLabel()
+            } else {
+                self.animator.stopAnimation(true)
+                self.animator.finishAnimation(at: .current)
+                self.waitLabel.isHidden = true
+            }
+        }
+    }
+    
+    //MARK: - LabelAnimation
+    private func downAndUpLabel() {
+        self.animator = UIViewPropertyAnimator(duration: 2.0, curve: .linear, animations: {
+            UIView.animateKeyframes(withDuration: 2.0, delay: 0) {
+                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) {
+                    self.waitLabelcenterYConstraint.constant = 70
+                    self.view.layoutIfNeeded()
+                }
+                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5) {
+                    self.waitLabelcenterYConstraint.constant = 30
+                    self.view.layoutIfNeeded()
+                }
+            }
+            self.animator.addCompletion { position in
+                if position == .end {
+                    self.downAndUpLabel()
+                }
+                    
+            }
+        })
+        self.animator.startAnimation()
+    }
+
+    //MARK: - Open SearchController
+    func openSearchController(with text: String) {
+        let vc = Builder.createSearchVC(with: text)
+        print("Текст передан презентору из контроллера - \(text)")
+        self.present(vc, animated: true)
+    }
+    
+    
     func update() {
-        updateWithData() 
+        updateWithData()
     }
     
     //Цвет ячеек
@@ -224,6 +292,16 @@ extension HomeViewController: HomeViewProtocol {
         cell.color(isSelected ? .black : .clear)
         
     }
+
+        //Цвет ячеек
+            func didSelectItemAt(at indexPath: IndexPath, isSelected: Bool) {
+                guard let cell = collectionView.cellForItem(at: indexPath) as? TimeCell else { return }
+    
+                cell.color(isSelected ? .black : .clear)
+    
+    
+    
+            }
     
     
     //MARK: - SnapShot
@@ -233,10 +311,11 @@ extension HomeViewController: HomeViewProtocol {
         snapshot.appendSections([.time, .topBooks, .recentBooks])
         let timeItems = presenter.times.map { Item(time: $0) }
         guard let topBookItems = presenter.topBooks?.compactMap({ Item(work: $0)}),
-              let recentBookItems =  presenter.recentBooks?.compactMap({ Item(book: $0)}) else { return }
+              let recentBookItems =  presenter.recentBooks?.compactMap({ Item(work: $0)}) else { return }
         snapshot.appendItems(timeItems, toSection: .time)
         snapshot.appendItems(topBookItems, toSection: .topBooks)
         snapshot.appendItems(recentBookItems, toSection: .recentBooks)
+        
         dataSource.apply(snapshot, animatingDifferences: true)
     }
 }
@@ -245,9 +324,8 @@ extension HomeViewController: HomeViewProtocol {
 extension HomeViewController:  UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         presenter.didSelectItemAt(indexPath)
-        
-        guard let book = presenter.topBooks?[indexPath.row] else { return }
-        let productViewController = Builder.createProductVC(book: book)
-        navigationController?.pushViewController(productViewController, animated: true)
     }
 }
+
+
+

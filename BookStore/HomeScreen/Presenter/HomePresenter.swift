@@ -11,12 +11,18 @@ import Foundation
 protocol HomeViewProtocol: AnyObject {
     func updateCellAppearance(at indexPath: IndexPath, isSelected: Bool)
     func update()
+    func openSearchController(with text: String)
+    func animatig(_ start: Bool)
 }
 
 protocol HomePresenterProtocol: AnyObject {
     var topBooks: [Work]? { get }
-    var recentBooks: [Book]? { get }
+    var recentBooks: [Work]? { get }
     var times: [TimeModel] { get }
+    var searhedBook: [Book]? { get }
+    func didTextChange(_ text: String)
+    func didTapSearchButton(_ text: String)
+    func didSelectItemAt(_ indexPath: IndexPath)
     init(view: HomeViewProtocol, networkService: NetworkServiceProtocol)
 }
 
@@ -29,59 +35,91 @@ final class HomePresenter: HomePresenterProtocol {
     private var lastSelectedIndexPath: IndexPath?
         
     var topBooks: [Work]?
-    var recentBooks: [Book]?
+    var recentBooks: [Work]?
+    var searhedBook: [Book]?
     var times = [TimeModel(times: "This Week"), TimeModel(times: "This Month"), TimeModel(times: "This Year")]
     
     //MARK: - Init
     required init(view: HomeViewProtocol, networkService: NetworkServiceProtocol) {
         self.view = view
         self.networkService = networkService
-        topBooksRequest()
-        recentBookRequest(sort: .weekly)
+        timeBookRequest(sort: .daily) {
+            self.view?.update()
+        }
     }
     
     //MARK: - Methods
     
-    //CollectionView Delegate
+
+    // CollectionView Delegate
     func didSelectItemAt(_ indexPath: IndexPath) {
-        // Сообщить View об изменении состояния предыдущей выбранной ячейки
-        if let lastIndexPath = lastSelectedIndexPath {
-            view?.updateCellAppearance(at: lastIndexPath, isSelected: false)
+        if indexPath.section == 0 {
+            // Обновление состояния предыдущей выбранной ячейки
+            if let lastIndexPath = lastSelectedIndexPath {
+                times[lastIndexPath.row].isSelected = false
+                view?.updateCellAppearance(at: lastIndexPath, isSelected: false)
+            }
+            // Обновление текущей выбранной ячейки
+            lastSelectedIndexPath = indexPath
+            times[indexPath.row].isSelected = true
+            view?.updateCellAppearance(at: indexPath, isSelected: true)
+
+            // Выполнение запроса в зависимости от выбранного времени
+            let selectedTimeModel = times[indexPath.row]
+            switch selectedTimeModel.times {
+            case "This Week":
+                print("Запрос ушел")
+                timeBookRequest(sort: .daily) {
+                    print("Ответ получен")
+                    self.view?.update()
+                }
+            case "This Month":
+                print("Запрос ушел")
+                timeBookRequest(sort: .weekly) {
+                    print("Ответ получен")
+                    self.view?.update()
+                }
+            case "This Year":
+                print("Запрос ушел")
+                timeBookRequest(sort: .monthly) {
+                    print("Ответ получен")
+                    self.view?.update()
+                }
+            default:
+                break
+            }
         }
-        // Обновить текущую выбранную ячейку и изменить её внешний вид
-        lastSelectedIndexPath = indexPath
-        view?.updateCellAppearance(at: indexPath, isSelected: true)
     }
+
     
     //SearchBar Delegate
     func didTextChange(_ text: String) {
     }
     
+    //MARK: - SearchButton action
     func didTapSearchButton(_ text: String) {
-        print(text)
+        print("Текст передан контроллеру из презентора - \(text)")
+        view?.openSearchController(with: text)
     }
     
-    func topBooksRequest() {
-        networkService.searchBooks(keyWords: "war") { [weak self] (result: Result<Books, Error>) in
-            switch result {
-            case .success(let book):
-                self?.recentBooks = book.books
-                DispatchQueue.main.async { self?.view?.update() }
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-    func recentBookRequest(sort: TrendingSort) {
+    //MARK: - Network Requeest
+    func timeBookRequest(sort: TrendingSort, completion: @escaping () -> Void) {
+        view?.animatig(true)
         networkService.getTrendingBooks(sort: sort) { [weak self] (result: Result<[Work], Error>) in
-            switch result {
-            case .success(let trendBooks):
-                self?.topBooks = trendBooks
-                DispatchQueue.main.async { self?.view?.update() }
-            case .failure(let error):
-                print(error.localizedDescription)
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let trendBooks):
+                    self?.topBooks = trendBooks
+                    self?.recentBooks = trendBooks
+                    print(trendBooks[0].cover_i)
+                    self?.view?.animatig(false)
+                    self?.view?.update()
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+                completion()
             }
         }
     }
+
 }

@@ -9,6 +9,8 @@ import UIKit
 
 final class FavouriteCell: UICollectionViewCell {
     
+    
+    
     private let bookImage = UIImageView()
     private let button = UIButton()
     
