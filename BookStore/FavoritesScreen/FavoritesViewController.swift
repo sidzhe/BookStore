@@ -15,8 +15,8 @@ final class FavoritesViewController: UIViewController {
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
     }()
     private let image = UIImage(named: "book")!
-
-
+    
+    
     //MARK: - Presenter
     var presenter: FavoritesPresenterProtocol!
     
@@ -30,7 +30,7 @@ final class FavoritesViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         title = "Likes"
-
+        
     }
     //Register Cell
     private func registerCell() {
@@ -58,9 +58,9 @@ extension FavoritesViewController: FavoritesViewProtocol {
     
     //Delete Cell
     func deleteItem(at indexPath: IndexPath) {
-
+        
         print(indexPath)
-
+        
         // Remove cell with animation
         collectionView.performBatchUpdates {
             self.presenter.models.remove(at: indexPath.row)
@@ -71,7 +71,7 @@ extension FavoritesViewController: FavoritesViewProtocol {
     func reloadData() {
         collectionView.reloadData()
     }
-
+    
 }
 
 //MARK: - DataSource
@@ -79,7 +79,7 @@ extension FavoritesViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         presenter.models.count
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FavouriteCell.identifier, for: indexPath) as? FavouriteCell else {
             return UICollectionViewCell()
@@ -92,40 +92,14 @@ extension FavoritesViewController: UICollectionViewDataSource {
             if let currentIndexPath = collectionView.indexPath(for: cell) {
                 self.presenter.removeItem(at: currentIndexPath)
             }
-
+            
         }
         return cell
-
+        
     }
-
+    
 }
 
 extension FavoritesViewController: UICollectionViewDelegate {
-
-}
-//MARK: - SwiftUI
-import SwiftUI
-struct Provider_FavoritesViewController : PreviewProvider {
-    static var previews: some View {
-        ContainterView().edgesIgnoringSafeArea(.all)
-    }
-
-    struct ContainterView: UIViewControllerRepresentable {
-        func makeUIViewController(context: Context) -> UIViewController {
-            return FavoritesViewController()
-        }
-
-        typealias UIViewControllerType = UIViewController
-
-
-        let viewController = FavoritesViewController()
-        func makeUIViewController(context: UIViewControllerRepresentableContext<Provider_FavoritesViewController.ContainterView>) -> FavoritesViewController {
-            return viewController
-        }
-
-        func updateUIViewController(_ uiViewController: Provider_FavoritesViewController.ContainterView.UIViewControllerType, context: UIViewControllerRepresentableContext<Provider_FavoritesViewController.ContainterView>) {
-
-        }
-    }
-
+    
 }

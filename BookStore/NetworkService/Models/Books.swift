@@ -9,17 +9,10 @@ import Foundation
 
 // MARK: - Books
 struct Books: Codable, Hashable {
-//    let numFound, start: Int?
-//    let numFoundExact: Bool?
     let books: [Book]?
-//    let booksNumFound: Int?
-//    let q: String?
-
+    
     enum CodingKeys: String, CodingKey {
-//        case numFound, start, numFoundExact, 
         case books = "docs"
-//        case booksNumFound = "num_found"
-//        case q
     }
 }
 
@@ -27,7 +20,7 @@ struct BooksByCategories: Codable {
     let key, name: String?
     let workCount: Int?
     let works: [Work]
-
+    
     enum CodingKeys: String, CodingKey {
         case key, name
         case workCount = "work_count"
@@ -39,21 +32,14 @@ struct BooksByCategories: Codable {
 struct Book: Codable, Hashable {
     let key, type: String?
     let seed: [String]?
-    //Название книги?
     let title: String?
-//    let isbn: [String]?
-//    let hasFulltext, publicScanB: Bool?
     let ia, iaCollection: [String]?
     let coverI: Int?
-    //Имя автора?
     let authorName: [String]?
     
-
+    
     enum CodingKeys: String, CodingKey {
         case key, type, title, seed
-//        case isbn
-//        case hasFulltext = "has_fulltext"
-//        case publicScanB = "public_scan_b"
         case ia
         case iaCollection = "ia_collection"
         case coverI = "cover_i"

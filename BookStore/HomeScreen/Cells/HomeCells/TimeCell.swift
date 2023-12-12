@@ -45,14 +45,7 @@ final class TimeCell: UICollectionViewCell {
     func config(with text: TimeModel) {
         label.text = text.times
         label.sizeToFit()
-    }
-    
-    func color(_ color: UIColor) {
-        contentView.backgroundColor = color
-        if color == UIColor.black {
-            self.label.textColor = .white
-        } else {
-            self.label.textColor = .black
-        }
+        label.textColor = text.isSelected ? .white : .black
+        contentView.backgroundColor = text.isSelected ? .black : .white
     }
 }

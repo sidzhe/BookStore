@@ -8,16 +8,13 @@
 import Foundation
 
 //MARK: - Protocols
-protocol CategoriesViewProtocol: AnyObject {
-    
-}
+protocol CategoriesViewProtocol: AnyObject {}
 
 protocol CategoriesPresenterProtocol: AnyObject {
     var currentText: String? { get set }
     var categoriesModel: [String] { get }
     init(view: CategoriesViewProtocol, netwrokService: NetworkServiceProtocol)
     func filteredPairs(with filter: String?) -> [String]
-    func requestCategorise(_ categories: String)
 }
 
 //MARK: - CategoriesPresenter
@@ -40,16 +37,5 @@ final class CategoriesPresenter: CategoriesPresenterProtocol {
         guard let filter = filter, !filter.isEmpty else { return categoriesModel }
         let data = categoriesModel.filter({ $0.contains(filter) })
         return data
-    }
-    
-    func requestCategorise(_ categories: String) {
-        networkService.getBooksByCategories(category: categories) { [weak self] result in
-            switch result {
-            case .success(let data):
-                print(data)
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
     }
 }

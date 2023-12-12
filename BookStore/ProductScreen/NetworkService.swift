@@ -26,7 +26,8 @@ final class NetworkService: NetworkServiceProtocol {
         components.scheme = NetworkConstants.scheme
         components.host = NetworkConstants.baseUrl
         components.path = "/trending/\(sort.rawValue).json"
-        components.queryItems = [URLQueryItem(name: "limit", value: "10")]
+        let items = [URLQueryItem(name: "limit", value: "10")]
+        components.queryItems = items
         
         guard let url = components.url else { return }
         
@@ -48,8 +49,9 @@ final class NetworkService: NetworkServiceProtocol {
         components.scheme = NetworkConstants.scheme
         components.host = NetworkConstants.baseUrl
         components.path = Endpoint.search.rawValue
-        components.queryItems = [URLQueryItem(name: "q", value: "\(keyWords)"), URLQueryItem(name: "limit", value: "10")]
-        
+        let items = [URLQueryItem(name: "q", value: "\(keyWords)"),
+                     URLQueryItem(name: "fields", value: "key,title,author_name,cover_i,editions,editions.key,editions.title,editions.ebook_access,ratings_count,subtitle"), URLQueryItem(name: "has_fulltext", value: "true"), URLQueryItem(name: "limit", value: "10")]
+        components.queryItems = items
         guard let url = components.url else { return }
         
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
@@ -91,7 +93,7 @@ final class NetworkService: NetworkServiceProtocol {
         var components = URLComponents()
         components.scheme = NetworkConstants.scheme
         components.host = NetworkConstants.baseUrl
-        components.path = "/\(key).json"
+        components.path = "\(key).json"
         
         guard let url = components.url else { return }
         print(url)

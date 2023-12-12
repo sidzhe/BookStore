@@ -9,18 +9,15 @@ import UIKit
 
 final class SearchCell: UICollectionViewCell {
     
+    //MARK: - UI Elements
     private let bookImage = UIImageView()
     private let button = UIButton()
-    
     private let genre = UILabel(font: .systemFont(ofSize: 10), textColor: .white)
     private let bookName = UILabel(font: .boldSystemFont(ofSize: 15), textColor: .white)
     private let author = UILabel(font: .boldSystemFont(ofSize: 10), textColor: .white)
-    
     private lazy var stackView = UIStackView(.vertical, 5, .fill, .equalSpacing, [genre, bookName, author])
     
-    var deleteButtonTapped: (() -> Void)?
-    
-    
+    //MARK: - Inits
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -31,9 +28,10 @@ final class SearchCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: - Setup UI
     private func setupView() {
         contentView.addSubViews(bookImage, button, stackView)
-       
+        
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
         
@@ -63,14 +61,16 @@ final class SearchCell: UICollectionViewCell {
         ])
     }
     
+    //MARK: - Configure
     func config(book: Book) {
         self.genre.text = book.iaCollection?.first
         self.bookName.text = book.title
         self.author.text = book.authorName?.first
         self.bookImage.kf.setImage(with: book.urlImage)
     }
-
+    
+    //MARK: - Target
     @objc private func deleteButtonAction() {
-        deleteButtonTapped?()
+   
     }
 }

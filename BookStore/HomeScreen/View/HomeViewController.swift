@@ -23,12 +23,12 @@ final class HomeViewController: UIViewController {
     
     //MARK: - viewDidLoad
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         configureActivityIndicator()
         configureCollectionView()
         configureDataSource()
         setupSearchController()
-        
         
     }
     
@@ -40,9 +40,9 @@ final class HomeViewController: UIViewController {
         searchController.searchBar.delegate = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Happy Reading!"
+        searchController.automaticallyShowsCancelButton = false
         navigationItem.searchController = searchController
     }
-    
     
     //MARK: - CollectionViewConfig
     private func configureCollectionView() {
@@ -90,11 +90,11 @@ final class HomeViewController: UIViewController {
             switch sectionKind {
             case .time:
                 // Создаем секцию для временных интервалов (This Week, This Month, This Year)
-                let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: .fractionalHeight(1.1))
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
                 
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.3), heightDimension: .absolute(44))
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.33), heightDimension: .absolute(50))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
                 
                 section = NSCollectionLayoutSection(group: group)
@@ -131,7 +131,7 @@ final class HomeViewController: UIViewController {
                 
                 section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .continuous
-
+                
                 let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
                 let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
                 header.pinToVisibleBounds = false
@@ -143,12 +143,10 @@ final class HomeViewController: UIViewController {
         }
     }
     
-    
     //MARK: - Registration Methods
     private func registerTime() -> UICollectionView.CellRegistration<TimeCell, TimeModel> {
         return UICollectionView.CellRegistration<TimeCell, TimeModel> { (cell, indexPath, timeModel) in
             cell.config(with: timeModel)
-            cell.color(timeModel.isSelected ? .black : .clear)
         }
     }
     
@@ -213,30 +211,26 @@ final class HomeViewController: UIViewController {
             return nil
         }
     }
-    
-    
 }
 
 
 //MARK: - SearchBar Delegate
 extension HomeViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        presenter.didTextChange(searchText)
+        //        presenter.didTextChange(searchText)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
-        if let searchText = searchBar.text {
-            presenter.didTapSearchButton(searchText)
-        }
+        guard let searchText = searchBar.text else { return }
+        let vc = Builder.createSearchVC(with: searchText)
+        present(vc, animated: true)
     }
 }
 
 
 //MARK: - HomeViewProtocol
-
 extension HomeViewController: HomeViewProtocol {
-    
     func animatig(_ start: Bool) {
         DispatchQueue.main.async {
             start ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
@@ -267,42 +261,14 @@ extension HomeViewController: HomeViewProtocol {
                 if position == .end {
                     self.downAndUpLabel()
                 }
-                    
             }
         })
         self.animator.startAnimation()
     }
-
-    //MARK: - Open SearchController
-    func openSearchController(with text: String) {
-        let vc = Builder.createSearchVC(with: text)
-        print("Текст передан презентору из контроллера - \(text)")
-        self.present(vc, animated: true)
-    }
-    
     
     func update() {
         updateWithData()
     }
-    
-    //Цвет ячеек
-    func updateCellAppearance(at indexPath: IndexPath, isSelected: Bool) {
-        guard let cell = collectionView.cellForItem(at: indexPath) as? TimeCell else { return }
-        
-        cell.color(isSelected ? .black : .clear)
-        
-    }
-
-        //Цвет ячеек
-            func didSelectItemAt(at indexPath: IndexPath, isSelected: Bool) {
-                guard let cell = collectionView.cellForItem(at: indexPath) as? TimeCell else { return }
-    
-                cell.color(isSelected ? .black : .clear)
-    
-    
-    
-            }
-    
     
     //MARK: - SnapShot
     func updateWithData() {
@@ -323,9 +289,15 @@ extension HomeViewController: HomeViewProtocol {
 //MARK: - UICollectionView Delegate
 extension HomeViewController:  UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presenter.didSelectItemAt(indexPath)
+        
+        if indexPath.section == 0 {
+            presenter.didSelectItemAt(indexPath)
+        } else {
+            guard let book = presenter.topBooks?[indexPath.row] else { return }
+            let productViewController = Builder.createProductVC(book: book)
+            navigationController?.pushViewController(productViewController, animated: true)
+        }
     }
 }
-
 
 

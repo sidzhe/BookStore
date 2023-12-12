@@ -144,9 +144,9 @@ extension CategoriesViewController: UISearchBarDelegate {
 
 extension CategoriesViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let item = presenter.categoriesModel[indexPath.row]
-        print(item.lowercased())
-        presenter.requestCategorise(item.lowercased())
+        let item = presenter.categoriesModel[indexPath.row].lowercased()
+        let searchVC = Builder.createSearchVC(with: item)
+        present(searchVC, animated: true)
     }
 }
 

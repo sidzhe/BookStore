@@ -8,31 +8,32 @@
 import UIKit
 
 final class SearchViewController: UIViewController {
+    
+    //MARK: - Properties
+    var presenter: SearchPresenterProtocol!
+    
+    //MARK: - UI Elements
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 320, height: 142)
-        return UICollectionView(frame: .zero, collectionViewLayout: layout)
-    }()    
+        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        view.dataSource = self
+        view.delegate = self
+        return view
+    }()
+    
     private let activityIndicator = UIActivityIndicatorView(style: .large)
-    var presenter: SearchPresenterProtocol!
     
-    
+    //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         register()
         setupView()
         setupConst()
-        collectionView.dataSource = self
-        collectionView.delegate = self
         view.backgroundColor = .white
         
     }
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-//            self.activityIndicator.stopAnimating()
-//        }
-//    }
     
     private func register() {
         collectionView.register(SearchCell.self, forCellWithReuseIdentifier: SearchCell.identifier)
@@ -56,34 +57,33 @@ final class SearchViewController: UIViewController {
     }
 }
 
+
+//MARK: - UICollectionViewDelegate
 extension SearchViewController: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let book = presenter.books?[indexPath.row]
+        let work = Work(key: book?.key, title: book?.title, coverEditionKey: nil, cover_i: book?.coverI, authorName: book?.authorName)
+        let productViewController = Builder.createProductVC(book: work)
+        present(productViewController, animated: true)
+    }
 }
 
+
+//MARK: - UICollectionViewDataSource
 extension SearchViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let book = presenter.books {
-            return book.count
-        } else {
-            return 0
-        }
-        
+        return presenter.books?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchCell.identifier, for: indexPath) as? SearchCell else {
-            return UICollectionViewCell()
-        }
-        if let book = presenter.getBook(at: indexPath) {
-            cell.config(book: book)
-            collectionView.reloadData()
-        }
-        return cell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchCell.identifier, for: indexPath) as? SearchCell
+        guard let model = presenter.books else { return UICollectionViewCell () }
+        cell?.config(book: model[indexPath.row])
+        return cell ?? UICollectionViewCell()
     }
-    
-    
 }
 
+//MARK: - SearchViewProtocol
 extension SearchViewController: SearchViewProtocol {
     func animating(_ start: Bool) {
         DispatchQueue.main.async {
@@ -91,11 +91,7 @@ extension SearchViewController: SearchViewProtocol {
         }
     }
     
-
-    
     func reloadData() {
         collectionView.reloadData()
     }
-    
-    
 }

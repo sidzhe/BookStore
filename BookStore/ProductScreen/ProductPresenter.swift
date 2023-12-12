@@ -41,6 +41,7 @@ final class ProductPresenter {
         self.view = view
         self.networkService = networkService
         self.book = book
+        print("BOOK ---- \(book.key)")
     }
 }
 
