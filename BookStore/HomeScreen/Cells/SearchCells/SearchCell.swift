@@ -11,7 +11,6 @@ final class SearchCell: UICollectionViewCell {
     
     //MARK: - UI Elements
     private let bookImage = UIImageView()
-    private let button = UIButton()
     private let genre = UILabel(font: .systemFont(ofSize: 10), textColor: .white)
     private let bookName = UILabel(font: .boldSystemFont(ofSize: 15), textColor: .white)
     private let author = UILabel(font: .boldSystemFont(ofSize: 10), textColor: .white)
@@ -30,15 +29,11 @@ final class SearchCell: UICollectionViewCell {
     
     //MARK: - Setup UI
     private func setupView() {
-        contentView.addSubViews(bookImage, button, stackView)
+        contentView.addSubViews(bookImage, stackView)
         
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
-        
-        button.setImage(UIImage(systemName: "minus"), for: .normal)
-        button.tintColor = .white
         contentView.backgroundColor = .black
-        button.addTarget(self, action: #selector(deleteButtonAction), for: .touchUpInside)
     }
     
     private func setupConst() {
@@ -52,12 +47,6 @@ final class SearchCell: UICollectionViewCell {
             
             stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 14),
             stackView.leadingAnchor.constraint(equalTo: bookImage.trailingAnchor, constant: 10),
-            stackView.trailingAnchor.constraint(equalTo: button.leadingAnchor, constant: -43),
-            
-            button.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 14),
-            button.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -9),
-            button.heightAnchor.constraint(equalToConstant: 20),
-            button.widthAnchor.constraint(equalTo: button.heightAnchor)
         ])
     }
     
@@ -67,10 +56,5 @@ final class SearchCell: UICollectionViewCell {
         self.bookName.text = book.title
         self.author.text = book.authorName?.first
         self.bookImage.kf.setImage(with: book.urlImage)
-    }
-    
-    //MARK: - Target
-    @objc private func deleteButtonAction() {
-   
     }
 }
