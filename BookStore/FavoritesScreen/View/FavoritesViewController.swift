@@ -29,7 +29,7 @@ final class FavoritesViewController: UIViewController {
         registerCell()
         collectionView.dataSource = self
         collectionView.delegate = self
-        title = "Likes"
+//        title = "Likes"
         
     }
     //Register Cell

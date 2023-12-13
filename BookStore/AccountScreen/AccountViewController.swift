@@ -9,10 +9,11 @@ class AccountViewController: UIViewController, UINavigationControllerDelegate {
     let nameTextField = UITextField()
     let pushSelectImageAction = UIButton(type: .custom)
     let avatar = UIImageView()
-    let myListsTextField = UIButton()
-    let arrowButton = UIButton()
+//    let myButton = UIButton()
     
     
+    
+   
 
     //MARK: - Presenter
     var presenter: AccountPresenterProtocol!
@@ -22,6 +23,8 @@ class AccountViewController: UIViewController, UINavigationControllerDelegate {
         super.viewDidLoad()
         
         view.backgroundColor = .white
+        
+        
         
         initialize()
         loadUserDefaults()
@@ -38,7 +41,7 @@ class AccountViewController: UIViewController, UINavigationControllerDelegate {
         
         
         let label = UILabel()
-        label.text = "Acount"
+        label.text = "Account"
         view.addSubview(label)
         label.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(100)
@@ -49,7 +52,7 @@ class AccountViewController: UIViewController, UINavigationControllerDelegate {
         avatar.image = UIImage(systemName: "person")
         avatar.tintColor = .black
          avatar.clipsToBounds = true
-        avatar.layer.cornerRadius = 50
+        avatar.layer.cornerRadius = 75
         view.addSubview(avatar)
         avatar.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -67,28 +70,79 @@ class AccountViewController: UIViewController, UINavigationControllerDelegate {
              make.height.equalTo(avatar)
          }
          
-         pushSelectImageAction.addTarget(self, action: #selector(pushButton), for: .touchUpInside)
+//         pushSelectImageAction.addTarget(self, action: #selector(pushButton), for: .touchUpInside)
         
             
-        nameTextField.backgroundColor = .lightGray
+        nameTextField.backgroundColor = .systemGray5
         nameTextField.borderStyle = .roundedRect
         nameTextField.delegate = self
         view.addSubview(nameTextField)
         nameTextField.snp.makeConstraints { make in
+            make.height.equalTo(50)
             make.top.equalTo(avatar.snp.bottom).offset(50)
             make.centerX.equalToSuperview()
             make.horizontalEdges.equalToSuperview().inset(20)
             nameTextField.placeholder = "Your name"
         }
          
+//         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+//         cell.textLabel?.text = "Lists"
+//         cell.imageView?.image = UIImage(systemName: "arrow.right")
+//         cell.backgroundColor = .systemGray5
+//         cell.textLabel?.textColor = .black
+//         view.addSubview(cell)
+//         cell.layer.cornerRadius = 5
+//         cell.snp.makeConstraints { make in
+//             make.top.equalTo(nameTextField.snp.bottom).offset(20)
+//                                   make.centerX.equalToSuperview()
+//                                   make.horizontalEdges.equalToSuperview().inset(20)
+//                                   make.height.equalTo(50)
+//         }
          
-         arrowButton.setTitle("arrowshape.right.cirkle", for: .normal)
-         view.addSubview(arrowButton)
-         arrowButton.snp.makeConstraints { make in
-             
-         }
+
+         
+
+         
+         var container = AttributeContainer()
+         container.font = UIFont.systemFont(ofSize: 18)
+
+         var configuration = UIButton.Configuration.plain()
+         configuration.attributedTitle = AttributedString("Lists", attributes: container)
+         configuration.baseForegroundColor = .black
+         configuration.image = UIImage(systemName: "arrow.right")
+         configuration.imagePlacement = .trailing
+         let button = UIButton(configuration: configuration, primaryAction: nil)
+         view.addSubview(button)
+         button.backgroundColor = .systemGray5
+         button.layer.cornerRadius = 5
+         button.snp.makeConstraints { make in
+                      make.top.equalTo(nameTextField.snp.bottom).offset(20)
+                      make.centerX.equalToSuperview()
+                      make.horizontalEdges.equalToSuperview().inset(20)
+                      make.height.equalTo(50)
+
+                  }
          
          
+//         view.addSubview(myButton)
+//         myButton.backgroundColor = .systemGray5
+//         myButton.semanticContentAttribute = .forceRightToLeft
+//         myButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: myButton.bounds.width + 45, bottom: 0, right: 0)
+//         myButton.tintColor = .black
+//         myButton.layer.cornerRadius = 5
+//         myButton.setTitle("My lists", for: .normal)
+//         myButton.setTitleColor(.black, for: .normal)
+//         myButton.contentHorizontalAlignment = .left
+//         myButton.setImage(UIImage(systemName: "arrow.right"), for: .normal)
+//         myButton.snp.makeConstraints { make in
+//             make.top.equalTo(nameTextField.snp.bottom).offset(20)
+//             make.centerX.equalToSuperview()
+//             make.horizontalEdges.equalToSuperview().inset(20)
+//             make.height.equalTo(50)
+//
+//         }
+         
+         button.addTarget(self, action: #selector(pushToViewContr), for: .touchUpInside)
          
     }
     
@@ -99,6 +153,13 @@ class AccountViewController: UIViewController, UINavigationControllerDelegate {
         imagePicker.allowsEditing = true
         imagePicker.delegate = self
         present(imagePicker, animated: true)
+    }
+    
+    @objc func pushToViewContr() {
+
+        let listViewController = ListViewController()
+        navigationController?.pushViewController(listViewController, animated: true)
+
     }
 }
 
@@ -148,6 +209,10 @@ extension AccountViewController: UIImagePickerControllerDelegate {
         guard let image = avatar.image else { return }
         let imageData = image.pngData()
         UserDefaults.standard.set(imageData, forKey: "savedImage")
+        UserDefaults.standard.set(nameTextField.text, forKey: "savedText")
+        
+        
+        
         
         // добавить сохранение имени текстФилда
     }
@@ -156,10 +221,22 @@ extension AccountViewController: UIImagePickerControllerDelegate {
         if let imageData = UserDefaults.standard.data(forKey: "savedImage") {
             let image = UIImage(data: imageData)
             avatar.image = image
+            
+            
+        }
+        
+        if let saveText = UserDefaults.standard.string(forKey: "savedText") {
+            nameTextField.text = saveText
         }
     }
 
     
 }
+
+extension AccountViewController: UITableViewDelegate {
+    
+}
+
+
 
 
