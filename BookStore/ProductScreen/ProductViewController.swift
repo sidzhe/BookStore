@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import Kingfisher
+import SafariServices
 
 final class ProductViewController: UIViewController {
     
@@ -42,6 +43,12 @@ final class ProductViewController: UIViewController {
 
 //MARK: - ProductViewProtocol
 extension ProductViewController: ProductViewProtocol {
+    func getURL(_ url: String?) {
+        guard let url = URL(string: "https://archive.org/details/\(url ?? "")/mode/2up?view=theater") else { return }
+        let safariViewController = SFSafariViewController(url: url)
+        DispatchQueue.main.async { [weak self] in self?.present(safariViewController, animated: true) }
+    }
+    
     func setDetail() {
         guard let details = presenter.details else { return }
         configure(details: details)

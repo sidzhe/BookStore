@@ -49,6 +49,7 @@
 		EBDEC3762B227E8D00F7A1DA /* UIView-ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDEC3752B227E8D00F7A1DA /* UIView-ext.swift */; };
 		EBDEC3782B2280BD00F7A1DA /* TopCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDEC3772B2280BD00F7A1DA /* TopCell.swift */; };
 		EBDEC37A2B22864A00F7A1DA /* FavouriteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDEC3792B22864A00F7A1DA /* FavouriteCell.swift */; };
+		EBE32AB92B29D4B000691A1C /* ReadingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE32AB82B29D4B000691A1C /* ReadingModel.swift */; };
 		FA30DE222B2455E800415595 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA30DE212B2455E800415595 /* SearchViewController.swift */; };
 		FA30DE242B24590100415595 /* SearchViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA30DE232B24590100415595 /* SearchViewPresenter.swift */; };
 		FA30DE282B24592300415595 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA30DE272B24592300415595 /* SearchCell.swift */; };
@@ -97,6 +98,7 @@
 		EBDEC3752B227E8D00F7A1DA /* UIView-ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView-ext.swift"; sourceTree = "<group>"; };
 		EBDEC3772B2280BD00F7A1DA /* TopCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopCell.swift; sourceTree = "<group>"; };
 		EBDEC3792B22864A00F7A1DA /* FavouriteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteCell.swift; sourceTree = "<group>"; };
+		EBE32AB82B29D4B000691A1C /* ReadingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingModel.swift; sourceTree = "<group>"; };
 		FA30DE212B2455E800415595 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		FA30DE232B24590100415595 /* SearchViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewPresenter.swift; sourceTree = "<group>"; };
 		FA30DE272B24592300415595 /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
@@ -264,6 +266,7 @@
 				EB933F722B20D7810067D19C /* TrendBooks.swift */,
 				EB933F792B20F63E0067D19C /* BooksDetail.swift */,
 				7516D95B2B2367FB00682F87 /* BookCategories.swift */,
+				EBE32AB82B29D4B000691A1C /* ReadingModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -444,6 +447,7 @@
 				EB037F852B1CBC85006E9D45 /* FavoritesViewController.swift in Sources */,
 				756E3E2A2B20B39E00503A45 /* ProductView.swift in Sources */,
 				FA30DE222B2455E800415595 /* SearchViewController.swift in Sources */,
+				EBE32AB92B29D4B000691A1C /* ReadingModel.swift in Sources */,
 				EB037F992B1CD9B8006E9D45 /* ProductViewController.swift in Sources */,
 				EBDEC3782B2280BD00F7A1DA /* TopCell.swift in Sources */,
 				EBDEC3762B227E8D00F7A1DA /* UIView-ext.swift in Sources */,
