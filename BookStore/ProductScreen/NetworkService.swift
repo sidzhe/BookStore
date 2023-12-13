@@ -97,7 +97,7 @@ final class NetworkService: NetworkServiceProtocol {
         components.path = "\(key).json"
         
         guard let url = components.url else { return }
-        print(url)
+     
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data,_, error in
             guard let data = data, error == nil else { return }
             do {
@@ -148,7 +148,7 @@ final class NetworkService: NetworkServiceProtocol {
         components.queryItems = queryItems
         
         guard let url = components.url else { return }
-        print(url)
+    
         let task = URLSession.shared.dataTask(with: url) { data, _, error in
             guard let data = data, error == nil else { return }
             do {

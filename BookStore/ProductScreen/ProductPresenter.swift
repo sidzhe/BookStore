@@ -35,7 +35,6 @@ final class ProductPresenter {
     var details: BooksDetail?
     var book: Work?
     var rating: Double?
-    var keyForReading: String?
     
     //MARK: - Init
     
