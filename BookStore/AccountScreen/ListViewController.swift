@@ -8,12 +8,8 @@
 import UIKit
 import SnapKit
 
-class ListViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
-   
-    
-    
-    
-    
+final class ListViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -23,7 +19,6 @@ class ListViewController: UIViewController, UICollectionViewDataSource, UICollec
         view.delegate = self
         view.dataSource = self
         view.register(UICollectionViewListCell.self, forCellWithReuseIdentifier: cellIdentifier)
-        
         return view
     }()
     let cellIdentifier = "cell"

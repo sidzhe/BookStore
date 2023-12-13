@@ -38,7 +38,7 @@ final class AccountViewController: UIViewController, UINavigationControllerDeleg
         avatar.image = UIImage(systemName: "swift")
         avatar.tintColor = .black
         return avatar
-    }()    
+    }()
     
     private lazy var arrow: UIImageView = {
         let arrow = UIImageView()
@@ -68,7 +68,7 @@ final class AccountViewController: UIViewController, UINavigationControllerDeleg
         
         initialize()
         loadUserDefaults()
-
+        
     }
     
     //MARK: - viewDidDisappear
