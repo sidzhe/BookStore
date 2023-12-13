@@ -14,6 +14,7 @@ protocol NetworkServiceProtocol {
     func getRating(works: String, completion: @escaping (Result<Rating, Error>) -> Void)
     func getDetailBook(key: String, completion: @escaping (Result<BooksDetail, Error>) -> Void)
     func getBooksByCategories(category: String, completion: @escaping (Result<[Work], Error>) -> Void)
+    func searchArchiveBooks(query: String, completion: @escaping (Result<ReadingModel, Error>) -> Void)
 }
 
 
@@ -96,7 +97,7 @@ final class NetworkService: NetworkServiceProtocol {
         components.path = "\(key).json"
         
         guard let url = components.url else { return }
-        print(url)
+     
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data,_, error in
             guard let data = data, error == nil else { return }
             do {
@@ -129,4 +130,36 @@ final class NetworkService: NetworkServiceProtocol {
         }
         task.resume()
     }
+    
+    //get id
+    func searchArchiveBooks(query: String, completion: @escaping (Result<ReadingModel, Error>) -> Void) {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "archive.org"
+        components.path = "/advancedsearch.php"
+        
+        let queryItems: [URLQueryItem] = [
+            URLQueryItem(name: "q", value: "\(query)"),
+            URLQueryItem(name: "fl[]", value: "identifier"),
+            URLQueryItem(name: "rows", value: "1"),
+            URLQueryItem(name: "page", value: "1"),
+            URLQueryItem(name: "output", value: "json")
+        ]
+        components.queryItems = queryItems
+        
+        guard let url = components.url else { return }
+    
+        let task = URLSession.shared.dataTask(with: url) { data, _, error in
+            guard let data = data, error == nil else { return }
+            do {
+                let searchResults = try JSONDecoder().decode(ReadingModel.self, from: data)
+                completion(.success(searchResults))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+        
+        task.resume()
+    }
+    
 }

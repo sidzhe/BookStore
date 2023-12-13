@@ -11,6 +11,7 @@ import Foundation
 protocol ProductViewProtocol: AnyObject {
     func setDetail()
     func failure(error: Error)
+    func getURL(_ urlString: String?)
 }
 
 protocol ProductPresenterProtocol: AnyObject {
@@ -41,7 +42,6 @@ final class ProductPresenter {
         self.view = view
         self.networkService = networkService
         self.book = book
-        print("BOOK ---- \(book.key)")
     }
 }
 
@@ -54,8 +54,9 @@ extension ProductPresenter: ProductPresenterProtocol {
         print("Add to list")
     }
     
-    func didTapReadButton() {
-        print("Read")
+    func didTapReadButton()  {
+        guard let key = book?.key?.components(separatedBy: "/")[2] else { return }
+        getArch(id: key)
     }
     
     func setDetail() {
@@ -87,6 +88,18 @@ extension ProductPresenter: ProductPresenterProtocol {
                     print(error.localizedDescription)
                     self.view?.failure(error: error)
                 }
+            }
+        }
+    }
+    
+    func getArch(id: String) {
+        networkService.searchArchiveBooks(query: id) { [weak self] (result: Result<ReadingModel, Error>) in
+            switch result {
+            case .success(let res):
+                let urlKey = res.response?.docs?.first?.identifier
+                self?.view?.getURL(urlKey)
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }
