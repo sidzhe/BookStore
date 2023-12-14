@@ -227,9 +227,9 @@
 		EB037F7A2B1CB202006E9D45 /* FavoritesScreen */ = {
 			isa = PBXGroup;
 			children = (
-				EB037F842B1CBC85006E9D45 /* FavoritesViewController.swift */,
-				EB037F9C2B1CDA5D006E9D45 /* FavoritesPresenter.swift */,
-				EBDEC3792B22864A00F7A1DA /* FavouriteCell.swift */,
+				FAC18CF32B2B7A6E0085A3A8 /* Cell */,
+				FAC18CF12B2B7A560085A3A8 /* View */,
+				FAC18CF22B2B7A620085A3A8 /* Presenter */,
 			);
 			path = FavoritesScreen;
 			sourceTree = "<group>";
@@ -372,6 +372,30 @@
 				FAC18CED2B2B735D0085A3A8 /* BookCD+CoreDataProperties.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		FAC18CF12B2B7A560085A3A8 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EB037F842B1CBC85006E9D45 /* FavoritesViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		FAC18CF22B2B7A620085A3A8 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				EB037F9C2B1CDA5D006E9D45 /* FavoritesPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		FAC18CF32B2B7A6E0085A3A8 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				EBDEC3792B22864A00F7A1DA /* FavouriteCell.swift */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 		FAD12AB82B1F104F00E7B3C1 /* View */ = {
