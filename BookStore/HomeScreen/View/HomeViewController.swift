@@ -255,24 +255,24 @@ extension HomeViewController: HomeViewProtocol {
     
     //MARK: - LabelAnimation
     private func downAndUpLabel() {
-        self.animator = UIViewPropertyAnimator(duration: 2.0, curve: .linear, animations: {
-            UIView.animateKeyframes(withDuration: 2.0, delay: 0) {
-                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) {
-                    self.waitLabelcenterYConstraint.constant = 70
-                    self.view.layoutIfNeeded()
-                }
-                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5) {
-                    self.waitLabelcenterYConstraint.constant = 30
-                    self.view.layoutIfNeeded()
-                }
-            }
-            self.animator.addCompletion { position in
-                if position == .end {
-                    self.downAndUpLabel()
-                }
-            }
-        })
-        self.animator.startAnimation()
+//        self.animator = UIViewPropertyAnimator(duration: 2.0, curve: .linear, animations: {
+//            UIView.animateKeyframes(withDuration: 2.0, delay: 0) {
+//                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) {
+//                    self.waitLabelcenterYConstraint.constant = 70
+//                    self.view.layoutIfNeeded()
+//                }
+//                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5) {
+//                    self.waitLabelcenterYConstraint.constant = 30
+//                    self.view.layoutIfNeeded()
+//                }
+//            }
+//            self.animator.addCompletion { position in
+//                if position == .end {
+//                    self.downAndUpLabel()
+//                }
+//            }
+//        })
+//        self.animator.startAnimation()
     }
     
     func update() {
@@ -301,8 +301,12 @@ extension HomeViewController:  UICollectionViewDelegate {
         
         if indexPath.section == 0 {
             presenter.didSelectItemAt(indexPath)
-        } else {
+        } else if indexPath.section == 1 {
             guard let book = presenter.topBooks?[indexPath.row] else { return }
+            let productViewController = Builder.createProductVC(book: book)
+            navigationController?.pushViewController(productViewController, animated: true)
+        } else {
+            guard let book = CoreDataManager.shared.getBook()?[indexPath.row] else { return }
             let productViewController = Builder.createProductVC(book: book)
             navigationController?.pushViewController(productViewController, animated: true)
         }
