@@ -35,6 +35,7 @@ final class ProductPresenter {
     var details: BooksDetail?
     var book: Work?
     var rating: Double?
+    var bookCoreData: BookCD?
     
     //MARK: - Init
     
@@ -49,6 +50,12 @@ final class ProductPresenter {
 extension ProductPresenter: ProductPresenterProtocol {
     func didTapLikeButton() {
         print("Like")
+        guard let details = details else { return }
+        bookCoreData?.iaCollection = details.subjects?.first
+        bookCoreData?.authorName = details.authors?.first?.author.key
+        bookCoreData?.title = details.title
+        bookCoreData?.urlImage = details.urlImage?.absoluteString
+        
     }
     
     func didTapAddToListButton() {

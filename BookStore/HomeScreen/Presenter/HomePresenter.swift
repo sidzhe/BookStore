@@ -11,6 +11,7 @@ import Foundation
 protocol HomeViewProtocol: AnyObject {
     func update()
     func animatig(_ start: Bool)
+    func setupLabel()
 }
 
 protocol HomePresenterProtocol: AnyObject {
@@ -18,6 +19,7 @@ protocol HomePresenterProtocol: AnyObject {
     var recentBooks: [Work]? { get }
     var times: [TimeModel] { get set }
     var searhedBook: [Book]? { get }
+    func viewDidLoad()
     func didSelectItemAt(_ indexPath: IndexPath)
     init(view: HomeViewProtocol, networkService: NetworkServiceProtocol)
 }
@@ -37,6 +39,10 @@ final class HomePresenter: HomePresenterProtocol {
     required init(view: HomeViewProtocol, networkService: NetworkServiceProtocol) {
         self.view = view
         self.networkService = networkService
+        timeBookRequest(sort: .daily)
+    }
+    
+    func viewDidLoad() {
         timeBookRequest(sort: .daily)
     }
     
@@ -63,6 +69,7 @@ final class HomePresenter: HomePresenterProtocol {
     
     //MARK: - Network Requeest
     func timeBookRequest(sort: TrendingSort) {
+        self.view?.setupLabel()
         self.view?.animatig(true)
         networkService.getTrendingBooks(sort: sort) { [weak self] (result: Result<[Work], Error>) in
             switch result {
