@@ -77,4 +77,12 @@ final class Builder {
         view.presenter = presenter
         return view
     }
+    
+    //ListVC
+    static func createListVC() -> UIViewController {
+        let view = ListViewController()
+        let presenter = ListPresenter(view: view)
+        view.presenter = presenter
+        return view
+    }
 }
