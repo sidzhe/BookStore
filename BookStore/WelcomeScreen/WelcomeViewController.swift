@@ -10,6 +10,10 @@ import SnapKit
 
 final class WelcomeViewController: UIViewController {
     
+    //MARK: - Presenter
+    var presenter: WelcomePresenterProtocol!
+    
+    //MARK: - UI Elements
     private lazy var getStartedButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.white, for: .normal)
@@ -49,12 +53,10 @@ final class WelcomeViewController: UIViewController {
         return image
     }()
     
-    //MARK: - Presenter
-    var presenter: WelcomePresenterProtocol!
-    
     //MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "welcomeImage.png")!)
         scrollView.delegate = self
         pageControl.addTarget(self,
@@ -67,16 +69,25 @@ final class WelcomeViewController: UIViewController {
         view.insertSubview(welcomeImage, at: 0)
     }
     
+    //MARK: - viewDidLayoutSubviews
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setupUI()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        presenter.safeUserDefaults()
+        
+    }
+    
     @objc private func pageControlDidChange(_ sender: UIPageControl) {
         let current = sender.currentPage
         scrollView.setContentOffset(CGPoint(x: CGFloat(current) * view.frame.size.width,
                                             y: 0), animated: true)
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        setupUI()
-    }
+        
     private func setupUI() {
         view.backgroundColor = .white
         
@@ -116,7 +127,9 @@ final class WelcomeViewController: UIViewController {
     
     @objc private func getStartedButtonPressed() {
         let homeVC = Builder.createTabBar()
-        navigationController?.pushViewController(homeVC, animated: true)
+        homeVC.modalPresentationStyle = .fullScreen
+        homeVC.modalTransitionStyle = .crossDissolve
+        present(homeVC, animated: true)
     }
     
     func configureScrollView() {
