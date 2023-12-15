@@ -63,6 +63,7 @@ final class HomePresenter: HomePresenterProtocol {
     
     //MARK: - Network Requeest
     func timeBookRequest(sort: TrendingSort) {
+        self.view?.animatig(true)
         networkService.getTrendingBooks(sort: sort) { [weak self] (result: Result<[Work], Error>) in
             switch result {
             case .success(let trendBooks):
