@@ -16,7 +16,6 @@ final class FavoritesViewController: UIViewController {
     }()
     private let image = UIImage(named: "book")!
     
-    
     //MARK: - Presenter
     var presenter: FavoritesPresenterProtocol!
     
@@ -31,6 +30,12 @@ final class FavoritesViewController: UIViewController {
         collectionView.delegate = self
         title = "Likes"
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.getLikedBooks()
+        reloadData()
     }
     //Register Cell
     private func registerCell() {
@@ -63,7 +68,7 @@ extension FavoritesViewController: FavoritesViewProtocol {
         
         // Remove cell with animation
         collectionView.performBatchUpdates {
-            self.presenter.models.remove(at: indexPath.row)
+            self.presenter.book?.remove(at: indexPath.row)
             collectionView.deleteItems(at: [indexPath])
         }
     }
@@ -77,15 +82,17 @@ extension FavoritesViewController: FavoritesViewProtocol {
 //MARK: - DataSource
 extension FavoritesViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        presenter.models.count
+        guard let book = presenter.book else { return 0 }
+        return book.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FavouriteCell.identifier, for: indexPath) as? FavouriteCell else {
             return UICollectionViewCell()
         }
-        let book = presenter.getBook(with: indexPath)
-        cell.config(book: book, image: image)
+        if let book = presenter.getBook(with: indexPath) {
+            cell.config(book: book)
+        }
         //Remove cell
         cell.deleteButtonTapped = {
             // Get the current indexPath for the cell at the time of clicking

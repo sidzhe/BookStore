@@ -18,6 +18,7 @@ protocol ProductPresenterProtocol: AnyObject {
     var details: BooksDetail? { get set }
     var rating: Double? { get set }
     var book: Work? { get set }
+    var bookCoreData: LikedBooks? { get set }
     
     init(view: ProductViewProtocol, networkService: NetworkServiceProtocol, book: Work)
     func didTapAddToListButton()
@@ -35,7 +36,8 @@ final class ProductPresenter {
     var details: BooksDetail?
     var book: Work?
     var rating: Double?
-    var bookCoreData: BookCD?
+    var bookCoreData: LikedBooks?
+    var coreDataManager = CoreDataManager.shared
     
     //MARK: - Init
     
@@ -49,12 +51,9 @@ final class ProductPresenter {
 
 extension ProductPresenter: ProductPresenterProtocol {
     func didTapLikeButton() {
+        guard let book = book else { return }
         print("Like")
-        guard let details = details else { return }
-        bookCoreData?.iaCollection = details.subjects?.first
-        bookCoreData?.authorName = details.authors?.first?.author.key
-        bookCoreData?.title = details.title
-        bookCoreData?.urlImage = details.urlImage?.absoluteString
+        coreDataManager.saveLikedBook(from: book)
         
     }
     

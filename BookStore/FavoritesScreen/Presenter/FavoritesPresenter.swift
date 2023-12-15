@@ -7,12 +7,6 @@
 
 import Foundation
 
-struct BookModel: Hashable {
-    let genre: String
-    let bookName: String
-    let author: String
-}
-
 //MARK: - Protocols
 protocol FavoritesViewProtocol: AnyObject {
     //Удаление ячейки
@@ -22,9 +16,10 @@ protocol FavoritesViewProtocol: AnyObject {
 }
 
 protocol FavoritesPresenterProtocol: AnyObject {
-    var models: [BookModel] { get set }
+    var book: [Work]? { get set }
     //Получение книги
-    func getBook(with indexPath: IndexPath) -> BookModel
+    func getBook(with indexPath: IndexPath) -> Work?
+    func getLikedBooks()
     //Удаление ячейки
     func removeItem(at indexPath: IndexPath)
     init(view: FavoritesViewProtocol)
@@ -32,36 +27,36 @@ protocol FavoritesPresenterProtocol: AnyObject {
 
 //MARK: - FavoritesPresenter
 final class FavoritesPresenter: FavoritesPresenterProtocol {
-
-    //MARK: - Properties
-    weak var view: FavoritesViewProtocol?
-    
-    var models: [BookModel] =
-    [.init(genre: "classic", bookName: "The Catcher in the Rye", author: "J.D. Salinger"),
-     .init(genre: "classic", bookName: "The Catcher in the Rye", author: "J.D. Salinger"),
-     .init(genre: "classic", bookName: "The Catcher in the Rye", author: "J.D. Salinger"),
-     .init(genre: "classic", bookName: "The Catcher in the Rye", author: "J.D. Salinger"),
-    ]
-    
-    //Логика получения книги
-    func getBook(with indexPath: IndexPath) -> BookModel {
-        return models[indexPath.row]
-    }
-    //Логика удаления ячейки
-    func removeItem(at indexPath: IndexPath) {
-            guard indexPath.row < models.count else { return }
-
-            // Сообщаем контроллеру о необходимости обновления
-            if models.isEmpty {
-                view?.reloadData() // Метод для перезагрузки данных в коллекции
-            } else {
-                view?.deleteItem(at: indexPath) // Метод для удаления элемента
-            }
-        }
-    
-
     //MARK: - Init
     required init(view: FavoritesViewProtocol) {
         self.view = view
+        getLikedBooks()
+        
     }
+    //MARK: - Properties
+    weak var view: FavoritesViewProtocol?
+    
+    var book: [Work]?
+    var coreData = CoreDataManager.shared
+    
+    //Логика получения книги
+    func getBook(with indexPath: IndexPath) -> Work? {
+            return book?[indexPath.row]
+    }
+    func getLikedBooks() {
+        book = coreData.getLikedBook()
+        print("Обновленные данные: \(String(describing: book))")
+    }
+    //Логика удаления ячейки
+    func removeItem(at indexPath: IndexPath) {
+        guard let book = book else { return }
+            guard indexPath.row < book.count else { return }
+            // Сообщаем контроллеру о необходимости обновления
+            if book.isEmpty {
+                view?.reloadData() // Метод для перезагрузки данных в коллекции
+            } else {
+                view?.deleteItem(at: indexPath) // Метод для удаления элемента
+                coreData.deleteLikeBook(from: book[indexPath.row])
+            }
+        }
 }

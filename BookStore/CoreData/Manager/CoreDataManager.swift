@@ -67,12 +67,45 @@ class CoreDataManager {
         saveContext()
     }
     
+    //MARK: - Save liked Book
+    func saveLikedBook(from model: Work) -> Bool {
+        print("saveLiked вызван", "сохраняемая модель -> \(model)")
+        let likedBook = LikedBooks(context: viewContext)
+        likedBook.author = model.authorName?.first
+        likedBook.title = model.title
+        likedBook.coverI = Int64(model.cover_i ?? 0)
+        likedBook.key = model.key
+
+        do {
+            print("данные сохранены в кордате")
+            try viewContext.save()
+            return true
+        } catch {
+            print("Ошибка сохранения: \(error)")
+            return false
+        }
+    }
+    
     //MARK: - Get Book from Core Data
     func getBook() -> [Work]? {
         let bookFetchRequest = BookCD.fetchRequest()
         guard let result = try? viewContext.fetch(bookFetchRequest) else { return [] }
         let work = result.map { Work(key: $0.iaCollection, title: $0.title, coverEditionKey: nil, cover_i: $0.imageUrl, authorName: [$0.authorName ?? ""]) }
         return work.reversed()
+    }
+    //MARK: - Get liked book
+    func getLikedBook() -> [Work]? {
+        let likedBookRequest = LikedBooks.fetchRequest()
+        do {
+            let result = try viewContext.fetch(likedBookRequest)
+            let work = result.map { Work(key: $0.key, title: $0.title, coverEditionKey: nil, cover_i: Int($0.coverI), authorName: [$0.author ?? ""])
+            }
+            print("Извлеченные книги: \(work)")
+            return work
+        } catch {
+            print("Ошибка извлечения: \(error)")
+            return []
+        }
     }
     
     //MARK: - Delete Book from Core Data
@@ -82,4 +115,29 @@ class CoreDataManager {
             try viewContext.save()
         }
     }
+    //MARK: - Delete liked book
+    func deleteLiked(_ book: LikedBooks) throws {
+        viewContext.delete(book)
+        if viewContext.hasChanges {
+            try viewContext.save()
+        }
+    }
+    
+    func deleteLikeBook(from bookModel: Work) {
+        let fetchRequest: NSFetchRequest<LikedBooks> = LikedBooks.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "key == %@", bookModel.key ?? "")
+        
+        do {
+            let existingBooks = try viewContext.fetch(fetchRequest)
+            if let existingBook = existingBooks.first {
+                try deleteLiked(existingBook)
+            }
+        } catch {
+            print(error.localizedDescription)
+            return
+        }
+
+    }
+    
+    
 }
