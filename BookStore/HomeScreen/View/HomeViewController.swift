@@ -32,6 +32,14 @@ final class HomeViewController: UIViewController {
         
     }
     
+    //MARK: - viewWillAppear
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        updateWithData()
+        
+    }
+    
     //MARK: - SearchBar setup
     private func setupSearchController() {
         navigationItem.searchController = searchController
@@ -224,6 +232,7 @@ extension HomeViewController: UISearchBarDelegate {
         searchBar.resignFirstResponder()
         guard let searchText = searchBar.text else { return }
         let vc = Builder.createSearchVC(with: searchText)
+        vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true)
     }
 }
@@ -277,7 +286,7 @@ extension HomeViewController: HomeViewProtocol {
         snapshot.appendSections([.time, .topBooks, .recentBooks])
         let timeItems = presenter.times.map { Item(time: $0) }
         guard let topBookItems = presenter.topBooks?.compactMap({ Item(work: $0)}),
-              let recentBookItems =  presenter.recentBooks?.compactMap({ Item(work: $0)}) else { return }
+              let recentBookItems = CoreDataManager.shared.getBook()?.compactMap({ Item(work: $0)}) else { return }
         snapshot.appendItems(timeItems, toSection: .time)
         snapshot.appendItems(topBookItems, toSection: .topBooks)
         snapshot.appendItems(recentBookItems, toSection: .recentBooks)

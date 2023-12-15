@@ -29,7 +29,7 @@ final class HomePresenter: HomePresenterProtocol {
     weak var view: HomeViewProtocol?
     var networkService: NetworkServiceProtocol
     var topBooks: [Work]?
-    var recentBooks: [Work]?
+    var recentBooks: [Work]? 
     var searhedBook: [Book]?
     var times = [TimeModel(times: "This Week", isSelected: true), TimeModel(times: "This Month"), TimeModel(times: "This Year")]
     
@@ -68,7 +68,7 @@ final class HomePresenter: HomePresenterProtocol {
             switch result {
             case .success(let trendBooks):
                 self?.topBooks = trendBooks
-                self?.recentBooks = trendBooks
+                self?.recentBooks = CoreDataManager.shared.getBook()
                 DispatchQueue.main.async {
                     self?.view?.animatig(false)
                     self?.view?.update()

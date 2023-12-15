@@ -42,6 +42,7 @@ final class ProductPresenter {
         self.view = view
         self.networkService = networkService
         self.book = book
+        saveRecent()
     }
 }
 
@@ -102,5 +103,10 @@ extension ProductPresenter: ProductPresenterProtocol {
                 print(error.localizedDescription)
             }
         }
+    }
+    
+    private func saveRecent() {
+        guard let book = book else { return }
+        CoreDataManager.shared.saveBook(from: book)
     }
 }

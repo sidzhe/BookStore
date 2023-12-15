@@ -22,6 +22,14 @@ final class SearchViewController: UIViewController {
         return view
     }()
     
+    private lazy var closeButton: UIButton = {
+        let button = UIButton()
+        button.setBackgroundImage(UIImage(systemName: "xmark.circle"), for: .normal)
+        button.tintColor = .black
+        button.addTarget(self, action: #selector(tapClose), for: .touchUpInside)
+        return button
+    }()
+    
     private let activityIndicator = UIActivityIndicatorView(style: .large)
     
     //MARK: - viewDidLoad
@@ -38,15 +46,18 @@ final class SearchViewController: UIViewController {
     private func register() {
         collectionView.register(SearchCell.self, forCellWithReuseIdentifier: SearchCell.identifier)
     }
+    
     private func setupView() {
+        view.addSubview(closeButton)
         view.addSubViews(collectionView, activityIndicator)
         activityIndicator.color = .label
         activityIndicator.startAnimating()
         activityIndicator.hidesWhenStopped = true
     }
+    
     private func setupConst() {
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 45),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
@@ -54,6 +65,16 @@ final class SearchViewController: UIViewController {
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+        
+        closeButton.snp.makeConstraints { make in
+            make.size.equalTo(40)
+            make.top.equalToSuperview().inset(55)
+            make.right.equalToSuperview().inset(40)
+        }
+    }
+    
+    @objc private func tapClose() {
+        dismiss(animated: true)
     }
 }
 

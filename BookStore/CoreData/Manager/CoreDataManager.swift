@@ -19,10 +19,10 @@ class CoreDataManager {
     }
     
     // MARK: - Core Data stack
-
+    
     lazy var persistentContainer: NSPersistentContainer = {
-
-        let container = NSPersistentContainer(name: "TestCoreData")
+        
+        let container = NSPersistentContainer(name: "BookCoreData")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
@@ -30,9 +30,9 @@ class CoreDataManager {
         })
         return container
     }()
-
+    
     // MARK: - Core Data Saving support
-
+    
     func saveContext () {
         let context = persistentContainer.viewContext
         if context.hasChanges {
@@ -45,22 +45,34 @@ class CoreDataManager {
         }
     }
     //MARK: - Save bookModel
-    func saveBook(from bookModel: Book) {
+    func saveBook(from bookModel: Work) {
+        let fetchRequest: NSFetchRequest<BookCD> = BookCD.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "title == %@", bookModel.title ?? "")
+        
+        do {
+            let existingBooks = try viewContext.fetch(fetchRequest)
+            if let existingBook = existingBooks.first {
+                try deleteBook(existingBook)
+            }
+        } catch {
+            print(error.localizedDescription)
+            return
+        }
+        
         let bookCD = BookCD(context: viewContext)
         bookCD.authorName = bookModel.authorName?.first
-        bookCD.iaCollection = bookModel.iaCollection?.first
+        bookCD.iaCollection = bookModel.key
         bookCD.title = bookModel.title
-        bookCD.urlImage = bookModel.urlImage.absoluteString
-        
+        bookCD.urlImage = String(bookModel.cover_i ?? 0)
         saveContext()
     }
+    
     //MARK: - Get Book from Core Data
-    func getBook() -> [BookCD] {
+    func getBook() -> [Work]? {
         let bookFetchRequest = BookCD.fetchRequest()
-        let sortDescriptor = NSSortDescriptor(key: "title", ascending: true)
-        bookFetchRequest.sortDescriptors = [sortDescriptor]
         guard let result = try? viewContext.fetch(bookFetchRequest) else { return [] }
-        return result
+        let work = result.map { Work(key: $0.iaCollection, title: $0.title, coverEditionKey: nil, cover_i: $0.imageUrl, authorName: [$0.authorName ?? ""]) }
+        return work.reversed()
     }
     
     //MARK: - Delete Book from Core Data

@@ -11,7 +11,7 @@ import CoreData
 
 @objc(BookCD)
 public class BookCD: NSManagedObject {
-    var imageUrl: URL? {
-        return URL(string: self.urlImage ?? "")
+    var imageUrl: Int? {
+        return Int(urlImage ?? "0")
     }
 }
