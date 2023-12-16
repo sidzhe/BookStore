@@ -155,4 +155,21 @@ class CoreDataManager {
             return
         }
     }
+    
+    func loadList() -> [String]? {
+        let listRequest = List.fetchRequest()
+        do {
+            let item = try viewContext.fetch(listRequest)
+            let output = item.compactMap { $0.listName }
+            return output.reversed()
+        } catch let error {
+            fatalError("Load list error \(error.localizedDescription)")
+        }
+    }
+    
+    func saveList(listName: String) {
+        let list = List(context: viewContext)
+        list.listName = listName
+        saveContext()
+    }
 }
