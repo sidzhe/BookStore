@@ -37,7 +37,7 @@ final class WantViewController: UIViewController {
     //MARK: - Setup UI
     
     private func setupNavagation() {
-        title = "Want to read"
+        title = presenter.title
         let buttonRigth = UIBarButtonItem(image: UIImage(named: "plus"), style: .plain, target: self, action: #selector(tapAdd))
         let buttonLeft = UIBarButtonItem(image: UIImage(systemName: "arrow.left"), style: .plain, target: self, action: #selector(tapBack))
         buttonRigth.tintColor = .black

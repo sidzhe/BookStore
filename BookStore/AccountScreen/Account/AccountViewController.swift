@@ -10,6 +10,14 @@ final class AccountViewController: UIViewController, UINavigationControllerDeleg
     var presenter: AccountPresenterProtocol!
     
     //MARK: - UI Elements
+    private lazy var nameLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 40, weight: .semibold)
+        label.adjustsFontSizeToFitWidth = true
+        label.textAlignment = .center
+        return label
+    }()
+    
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = .systemGray5
@@ -83,7 +91,9 @@ final class AccountViewController: UIViewController, UINavigationControllerDeleg
     private func initialize(){
         title = "Account"
         view.backgroundColor = .white
+        
         view.addSubview(avatar)
+        view.addSubview(nameLabel)
         view.addSubview(pushSelectImageAction)
         view.addSubview(nameTextField)
         view.addSubview(customView)
@@ -94,8 +104,14 @@ final class AccountViewController: UIViewController, UINavigationControllerDeleg
         
         avatar.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(30)
-            make.size.equalTo(100)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(50)
+            make.size.equalTo(150)
+        }
+        
+        nameLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(avatar.snp.bottom).inset(-40)
+            make.horizontalEdges.equalToSuperview().inset(20)
         }
         
         pushSelectImageAction.snp.makeConstraints { make in
@@ -105,8 +121,7 @@ final class AccountViewController: UIViewController, UINavigationControllerDeleg
         
         nameTextField.snp.makeConstraints { make in
             make.height.equalTo(50)
-            make.top.equalTo(avatar.snp.bottom).offset(50)
-            make.centerX.equalToSuperview()
+            make.center.equalToSuperview()
             make.horizontalEdges.equalToSuperview().inset(20)
         }
         
@@ -159,11 +174,12 @@ final class AccountViewController: UIViewController, UINavigationControllerDeleg
             let image = UIImage(data: imageData)
             avatar.image = image
             avatar.clipsToBounds = true
-            avatar.layer.cornerRadius = 50
+            avatar.layer.cornerRadius = 75
         }
         
         if let saveText = UserDefaults.standard.string(forKey: "savedText") {
             nameTextField.text = saveText
+            nameLabel.text = saveText
         }
     }
 }
@@ -178,6 +194,7 @@ extension AccountViewController: AccountViewProtocol {
 //MARK: - UITextFieldDelegate
 extension AccountViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        nameLabel.text = textField.text
         nameTextField.endEditing(true)
         return true
     }

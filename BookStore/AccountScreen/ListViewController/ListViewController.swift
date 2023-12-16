@@ -92,7 +92,8 @@ extension ListViewController: UICollectionViewDataSource {
 //MARK: - UICollectionViewDelegate
 extension ListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let wantVC = Builder.createWantVC()
+        let title = presenter.data[indexPath.row]
+        let wantVC = Builder.createWantVC(title: title)
         navigationController?.pushViewController(wantVC, animated: true)
     }
 }
