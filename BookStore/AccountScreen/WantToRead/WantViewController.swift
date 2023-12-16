@@ -69,7 +69,8 @@ final class WantViewController: UIViewController {
       }
     
     @objc private func tapAdd() {
-       
+        let addBookVC = Builder.createAddBookVC()
+        navigationController?.pushViewController(addBookVC, animated: true)
     }
     
     @objc private func tapBack() {
