@@ -32,6 +32,9 @@
 		EB037F9B2B1CD9D9006E9D45 /* ProductPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB037F9A2B1CD9D9006E9D45 /* ProductPresenter.swift */; };
 		EB037F9D2B1CDA5D006E9D45 /* FavoritesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB037F9C2B1CDA5D006E9D45 /* FavoritesPresenter.swift */; };
 		EB037F9F2B1CDB09006E9D45 /* AccountPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB037F9E2B1CDB09006E9D45 /* AccountPresenter.swift */; };
+		EB120A772B2D97E3004F4758 /* ListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB120A762B2D97E3004F4758 /* ListCell.swift */; };
+		EB120A7A2B2D9E3D004F4758 /* WantViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB120A792B2D9E3D004F4758 /* WantViewController.swift */; };
+		EB120A7C2B2D9E62004F4758 /* WantPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB120A7B2B2D9E62004F4758 /* WantPresenter.swift */; };
 		EB2CBC832B2CC5B400567AFE /* ListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2CBC822B2CC5B400567AFE /* ListPresenter.swift */; };
 		EB32FC482B2A3E2A00AAF8FE /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB32FC472B2A3E2A00AAF8FE /* ListViewController.swift */; };
 		EB8FCC9F2B231C090010E51C /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8FCC9E2B231C090010E51C /* HeaderCell.swift */; };
@@ -87,6 +90,9 @@
 		EB037F9A2B1CD9D9006E9D45 /* ProductPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductPresenter.swift; sourceTree = "<group>"; };
 		EB037F9C2B1CDA5D006E9D45 /* FavoritesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesPresenter.swift; sourceTree = "<group>"; };
 		EB037F9E2B1CDB09006E9D45 /* AccountPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPresenter.swift; sourceTree = "<group>"; };
+		EB120A762B2D97E3004F4758 /* ListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCell.swift; sourceTree = "<group>"; };
+		EB120A792B2D9E3D004F4758 /* WantViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WantViewController.swift; sourceTree = "<group>"; };
+		EB120A7B2B2D9E62004F4758 /* WantPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WantPresenter.swift; sourceTree = "<group>"; };
 		EB2CBC822B2CC5B400567AFE /* ListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListPresenter.swift; sourceTree = "<group>"; };
 		EB32FC472B2A3E2A00AAF8FE /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		EB8FCC9E2B231C090010E51C /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
@@ -241,6 +247,7 @@
 			children = (
 				EB2CBC7E2B2CC58C00567AFE /* Account */,
 				EB32FC462B2A3E1A00AAF8FE /* ListViewController */,
+				EB120A782B2D9BB2004F4758 /* WantToRead */,
 			);
 			path = AccountScreen;
 			sourceTree = "<group>";
@@ -273,6 +280,15 @@
 			path = Builder;
 			sourceTree = "<group>";
 		};
+		EB120A782B2D9BB2004F4758 /* WantToRead */ = {
+			isa = PBXGroup;
+			children = (
+				EB120A792B2D9E3D004F4758 /* WantViewController.swift */,
+				EB120A7B2B2D9E62004F4758 /* WantPresenter.swift */,
+			);
+			path = WantToRead;
+			sourceTree = "<group>";
+		};
 		EB2CBC7E2B2CC58C00567AFE /* Account */ = {
 			isa = PBXGroup;
 			children = (
@@ -287,6 +303,7 @@
 			children = (
 				EB32FC472B2A3E2A00AAF8FE /* ListViewController.swift */,
 				EB2CBC822B2CC5B400567AFE /* ListPresenter.swift */,
+				EB120A762B2D97E3004F4758 /* ListCell.swift */,
 			);
 			path = ListViewController;
 			sourceTree = "<group>";
@@ -508,11 +525,13 @@
 				FAC18CD72B2B6C960085A3A8 /* BookCoreData.xcdatamodeld in Sources */,
 				EB037F832B1CBC73006E9D45 /* HomeViewController.swift in Sources */,
 				FAC18CEF2B2B735D0085A3A8 /* BookCD+CoreDataProperties.swift in Sources */,
+				EB120A772B2D97E3004F4758 /* ListCell.swift in Sources */,
 				EB933F732B20D7810067D19C /* TrendBooks.swift in Sources */,
 				EB037F912B1CD6E9006E9D45 /* WelcomePresenter.swift in Sources */,
 				EB037F652B1CB042006E9D45 /* TabBarController.swift in Sources */,
 				EB8FCC9F2B231C090010E51C /* HeaderCell.swift in Sources */,
 				FA30DE242B24590100415595 /* SearchViewPresenter.swift in Sources */,
+				EB120A7C2B2D9E62004F4758 /* WantPresenter.swift in Sources */,
 				EBDEC36D2B227E2100F7A1DA /* TimeCell.swift in Sources */,
 				EB037F932B1CD840006E9D45 /* HomePresenter.swift in Sources */,
 				7516D95E2B236D2D00682F87 /* Extensions.swift in Sources */,
@@ -536,6 +555,7 @@
 				FA30DE222B2455E800415595 /* SearchViewController.swift in Sources */,
 				EBE32AB92B29D4B000691A1C /* ReadingModel.swift in Sources */,
 				EB037F992B1CD9B8006E9D45 /* ProductViewController.swift in Sources */,
+				EB120A7A2B2D9E3D004F4758 /* WantViewController.swift in Sources */,
 				EBDEC3782B2280BD00F7A1DA /* TopCell.swift in Sources */,
 				EBDEC3762B227E8D00F7A1DA /* UIView-ext.swift in Sources */,
 				EB037F972B1CD911006E9D45 /* CategoriesPresenter.swift in Sources */,
@@ -696,7 +716,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X8NTYMGXRX;
+				DEVELOPMENT_TEAM = 9444ZC259H;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BookStore/Support/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -709,7 +729,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dorogovd.BookStore;
+				PRODUCT_BUNDLE_IDENTIFIER = dorogovd.BookStore1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -724,7 +744,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X8NTYMGXRX;
+				DEVELOPMENT_TEAM = 9444ZC259H;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BookStore/Support/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -737,7 +757,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dorogovd.BookStore;
+				PRODUCT_BUNDLE_IDENTIFIER = dorogovd.BookStore1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

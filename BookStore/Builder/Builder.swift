@@ -85,4 +85,12 @@ final class Builder {
         view.presenter = presenter
         return view
     }
+    
+    //WantVC
+    static func createWantVC() -> UIViewController {
+        let view = WantViewController()
+        let presenter = WantPresenter(view: view)
+        view.presenter = presenter
+        return view
+    }
 }

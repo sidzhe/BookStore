@@ -114,7 +114,7 @@ private extension ProductView {
     
     func setConstraints() {
         NSLayoutConstraint.activate([
-            booksName.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            booksName.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor, constant: 20),
             booksName.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
             booksName.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
             

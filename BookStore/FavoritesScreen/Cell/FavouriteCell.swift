@@ -37,7 +37,7 @@ final class FavouriteCell: UICollectionViewCell {
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
         
-        button.setImage(UIImage(systemName: "minus"), for: .normal)
+        button.setImage(UIImage(systemName: "xmark"), for: .normal)
         button.tintColor = .white
         contentView.backgroundColor = .black
         button.addTarget(self, action: #selector(deleteButtonAction), for: .touchUpInside)

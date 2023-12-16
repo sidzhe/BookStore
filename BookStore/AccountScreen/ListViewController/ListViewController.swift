@@ -22,12 +22,11 @@ final class ListViewController: UIViewController {
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.delegate = self
         view.dataSource = self
-        view.register(UICollectionViewListCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        view.register(ListCell.self, forCellWithReuseIdentifier: ListCell.id)
         return view
     }()
     
-    let cellIdentifier = "cell"
-    
+    //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,15 +35,20 @@ final class ListViewController: UIViewController {
         
     }
     
+    //MARK: - Setup UI
     private func setupViews() {
         view.addSubview(collectionView)
         collectionView.snp.makeConstraints { $0.edges.equalToSuperview() }
     }
     
     private func setupNavigationItems() {
-        let button = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(tapAdd))
-        button.tintColor = .black
-        navigationItem.rightBarButtonItem = button
+        title = "List"
+        let buttonRigth = UIBarButtonItem(image: UIImage(named: "plus"), style: .plain, target: self, action: #selector(tapAdd))
+        let buttonLeft = UIBarButtonItem(image: UIImage(systemName: "arrow.left"), style: .plain, target: self, action: #selector(tapBack))
+        buttonRigth.tintColor = .black
+        buttonLeft.tintColor = .black
+        navigationItem.rightBarButtonItem = buttonRigth
+        navigationItem.leftBarButtonItem = buttonLeft
     }
     
     private func alert() {
@@ -64,24 +68,18 @@ final class ListViewController: UIViewController {
     @objc private func tapAdd() {
         alert()
     }
+    
+    @objc private func tapBack() {
+        navigationController?.popViewController(animated: true)
+    }
 }
 
 
 //MARK: - UICollectionViewDataSource
 extension ListViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? UICollectionViewListCell
-        var context = cell?.defaultContentConfiguration()
-        var backgroundContent = UIBackgroundConfiguration.listGroupedCell()
-        backgroundContent.backgroundColor = .systemGray2
-        backgroundContent.cornerRadius = 5
-        cell?.backgroundConfiguration = backgroundContent
-        context?.text = presenter.data[indexPath.row]
-        context?.textProperties.color = .systemGray2
-        cell?.contentConfiguration = context
-        cell?.backgroundColor = .systemGray5
-        cell?.layer.cornerRadius = 5
-        cell?.clipsToBounds = true
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ListCell.id, for: indexPath) as? ListCell
+        cell?.configure(presenter.data[indexPath.row])
         return cell ?? UICollectionViewCell()
     }
     
@@ -94,7 +92,8 @@ extension ListViewController: UICollectionViewDataSource {
 //MARK: - UICollectionViewDelegate
 extension ListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("")
+        let wantVC = Builder.createWantVC()
+        navigationController?.pushViewController(wantVC, animated: true)
     }
 }
 
