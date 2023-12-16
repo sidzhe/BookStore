@@ -11,6 +11,8 @@ import UIKit
 final class SectionHeader: UICollectionReusableView {
     static let reuseIdentifier = "header"
     let titleLabel = UILabel()
+    let button = UIButton()
+//    var buttonAction: (() -> Void)?
        
        override init(frame: CGRect) {
            super.init(frame: frame)
@@ -21,17 +23,27 @@ final class SectionHeader: UICollectionReusableView {
            fatalError("init(coder:) has not been implemented")
        }
        
-       private func configure() {
-           addSubview(titleLabel)
-           titleLabel.translatesAutoresizingMaskIntoConstraints = false
-           
-           NSLayoutConstraint.activate([
-               titleLabel.heightAnchor.constraint(equalToConstant: 20),
-               titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-               titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-               titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
-           ])
-           
-           titleLabel.font = .boldSystemFont(ofSize: 20)
-       }
+    
+    private func configure() {
+        addSubViews(titleLabel, button)
+//        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        
+        NSLayoutConstraint.activate([
+            titleLabel.heightAnchor.constraint(equalToConstant: 20),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+
+            button.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            button.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ])
+        button.setTitle("See more", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14)
+        button.setTitleColor(.black, for: .normal)
+        button.isUserInteractionEnabled = true
+        titleLabel.font = .boldSystemFont(ofSize: 20)
+    }
+    
+//    @objc private func buttonTupped() {
+//        buttonAction?()
+//    }
 }
