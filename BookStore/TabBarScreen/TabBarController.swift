@@ -15,7 +15,7 @@ final class TabBarController: UITabBarController, TabBarViewProtocol {
     //MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.navigationItem.setHidesBackButton(true, animated: true)
         setupTabBar()
         createTabBar()
         
