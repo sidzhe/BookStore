@@ -9,6 +9,7 @@
     <entity name="LikedBooks" representedClassName="LikedBooks" syncable="YES">
         <attribute name="author" optional="YES" attributeType="String"/>
         <attribute name="coverI" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="isSelected" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="key" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
     </entity>

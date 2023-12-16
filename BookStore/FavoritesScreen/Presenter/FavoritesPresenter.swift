@@ -13,6 +13,7 @@ protocol FavoritesViewProtocol: AnyObject {
     func deleteItem(at indexPath: IndexPath)
     //Обновление UI коллекции
     func reloadData()
+    func openProduct(with model: Work)
 }
 
 protocol FavoritesPresenterProtocol: AnyObject {
@@ -22,6 +23,7 @@ protocol FavoritesPresenterProtocol: AnyObject {
     func getLikedBooks()
     //Удаление ячейки
     func removeItem(at indexPath: IndexPath)
+    func didSelectItemAt(indexPath: IndexPath)
     init(view: FavoritesViewProtocol)
 }
 
@@ -59,4 +61,9 @@ final class FavoritesPresenter: FavoritesPresenterProtocol {
                 coreData.deleteLikeBook(from: book[indexPath.row])
             }
         }
+    
+    func didSelectItemAt(indexPath: IndexPath) {
+        guard let selectedBook = book else { return }
+        view?.openProduct(with: selectedBook[indexPath.row])
+    }
 }

@@ -12,6 +12,7 @@ protocol ProductViewProtocol: AnyObject {
     func setDetail()
     func failure(error: Error)
     func getURL(_ urlString: String?)
+    func setLikeButtonState(_ isLiked: Bool)
 }
 
 protocol ProductPresenterProtocol: AnyObject {
@@ -24,6 +25,8 @@ protocol ProductPresenterProtocol: AnyObject {
     func didTapAddToListButton()
     func didTapReadButton()
     func didTapLikeButton()
+    func deleteLikedBook()
+    func checkIfBookIsLiked()
     func setDetail()
 }
 
@@ -50,11 +53,23 @@ final class ProductPresenter {
 }
 
 extension ProductPresenter: ProductPresenterProtocol {
+    
+    func checkIfBookIsLiked() {
+        guard let book = book else { return }
+        let isLiked = coreDataManager.isBookLiked(bookKey: book.key ?? "")
+        view?.setLikeButtonState(isLiked)
+    }
+
     func didTapLikeButton() {
         guard let book = book else { return }
         print("Like")
         coreDataManager.saveLikedBook(from: book)
-        
+    }
+
+    func deleteLikedBook() {
+        guard let book = book else { return }
+        print("Unlike")
+        coreDataManager.deleteLikeBook(from: book)
     }
     
     func didTapAddToListButton() {

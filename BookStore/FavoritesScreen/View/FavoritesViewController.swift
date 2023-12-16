@@ -11,7 +11,7 @@ final class FavoritesViewController: UIViewController {
     
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 320, height: 140)
+        layout.itemSize = CGSize(width: 320, height: 142)
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
     }()
     private let image = UIImage(named: "book")!
@@ -61,6 +61,12 @@ final class FavoritesViewController: UIViewController {
 //MARK: - FavoritesViewProtocol
 extension FavoritesViewController: FavoritesViewProtocol {
     
+    func openProduct(with model: Work) {
+        let vc = Builder.createProductVC(book: model)
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    
     //Delete Cell
     func deleteItem(at indexPath: IndexPath) {
         
@@ -107,6 +113,9 @@ extension FavoritesViewController: UICollectionViewDataSource {
     
 }
 
+//MARK: - UICollectionView Delegate
 extension FavoritesViewController: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        presenter.didSelectItemAt(indexPath: indexPath)
+    }
 }

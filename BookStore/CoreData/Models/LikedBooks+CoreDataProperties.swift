@@ -2,7 +2,7 @@
 //  LikedBooks+CoreDataProperties.swift
 //  BookStore
 //
-//  Created by macbook on 15.12.2023.
+//  Created by macbook on 16.12.2023.
 //
 //
 
@@ -16,10 +16,11 @@ extension LikedBooks {
         return NSFetchRequest<LikedBooks>(entityName: "LikedBooks")
     }
 
-    @NSManaged public var title: String?
     @NSManaged public var author: String?
-    @NSManaged public var key: String?
     @NSManaged public var coverI: Int64
+    @NSManaged public var key: String?
+    @NSManaged public var title: String?
+    @NSManaged public var isSelected: Bool
 
 }
 

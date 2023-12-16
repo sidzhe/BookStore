@@ -75,6 +75,7 @@ class CoreDataManager {
         likedBook.title = model.title
         likedBook.coverI = Int64(model.cover_i ?? 0)
         likedBook.key = model.key
+        likedBook.isSelected = true
 
         do {
             print("данные сохранены в кордате")
@@ -106,6 +107,21 @@ class CoreDataManager {
             print("Ошибка извлечения: \(error)")
             return []
         }
+    }
+    //MARK: - Is book liked
+    func isBookLiked(bookKey: String) -> Bool {
+        let fetchRequest: NSFetchRequest<LikedBooks> = LikedBooks.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "key == %@", bookKey)
+        
+        do {
+            let existingBooks = try viewContext.fetch(fetchRequest)
+            if let existingBook = existingBooks.first {
+                return existingBook.isSelected
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+        return false
     }
     
     //MARK: - Delete Book from Core Data
