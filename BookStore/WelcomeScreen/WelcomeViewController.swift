@@ -60,6 +60,7 @@ final class WelcomeViewController: UIViewController {
         pageControl.addTarget(self,
                               action: #selector(pageControlDidChange(_:)),
                               for: .valueChanged)
+        pageControl.backgroundStyle = .prominent
         view.addSubview(getStartedButton)
         view.addSubview(scrollView)
         view.addSubview(pageControl)
@@ -77,6 +78,7 @@ final class WelcomeViewController: UIViewController {
         super.viewDidLayoutSubviews()
         setupUI()
     }
+    
     private func setupUI() {
         view.backgroundColor = .white
         
@@ -116,7 +118,10 @@ final class WelcomeViewController: UIViewController {
     
     @objc private func getStartedButtonPressed() {
         let homeVC = Builder.createTabBar()
+        let state = true
+        UserDefaults.standard.set(state, forKey: "state")
         navigationController?.pushViewController(homeVC, animated: true)
+    
     }
     
     func configureScrollView() {
@@ -129,6 +134,7 @@ final class WelcomeViewController: UIViewController {
             page.textAlignment = .center
             page.numberOfLines = 0
             scrollView.addSubview(page)
+            scrollView.showsHorizontalScrollIndicator = false
         }
     }
 }
