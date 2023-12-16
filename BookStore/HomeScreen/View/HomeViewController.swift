@@ -23,7 +23,6 @@ final class HomeViewController: UIViewController {
     
     //MARK: - viewDidLoad
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         configureActivityIndicator()
         configureCollectionView()
@@ -35,8 +34,8 @@ final class HomeViewController: UIViewController {
     //MARK: - viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         updateWithData()
+//        presenter.viewDidLoad()
         
     }
     
@@ -71,22 +70,25 @@ final class HomeViewController: UIViewController {
     
     //MARK: - ActivityIndicator & WaitLabel
     private func configureActivityIndicator() {
-        view.addSubViews(activityIndicator, waitLabel)
+        view.addSubViews(activityIndicator)
         activityIndicator.startAnimating()
         activityIndicator.hidesWhenStopped = true
         activityIndicator.color = .label
-        waitLabel.text = "Ожидайте"
-        
-        waitLabelcenterYConstraint = waitLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 30)
-        
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
-            waitLabelcenterYConstraint,
-            waitLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
+    
+//    private func configureWaitLabel() {
+//        view.addSubViews(waitLabel)
+//        waitLabel.text = "Ожидайте"
+//        waitLabelcenterYConstraint = waitLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 30)
+//        NSLayoutConstraint.activate([
+//            waitLabelcenterYConstraint,
+//            waitLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+//        ])
+//    }
     
     //MARK: - Layout
     private func createLayout() -> UICollectionViewLayout {
@@ -240,6 +242,16 @@ extension HomeViewController: UISearchBarDelegate {
 
 //MARK: - HomeViewProtocol
 extension HomeViewController: HomeViewProtocol {
+    func setupLabel() {
+        view.addSubViews(waitLabel)
+        waitLabel.text = "Ожидайте"
+        waitLabelcenterYConstraint = waitLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 30)
+        NSLayoutConstraint.activate([
+            waitLabelcenterYConstraint,
+            waitLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+    }
+    
     func animatig(_ start: Bool) {
         DispatchQueue.main.async {
             start ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
@@ -255,24 +267,24 @@ extension HomeViewController: HomeViewProtocol {
     
     //MARK: - LabelAnimation
     private func downAndUpLabel() {
-//        self.animator = UIViewPropertyAnimator(duration: 2.0, curve: .linear, animations: {
-//            UIView.animateKeyframes(withDuration: 2.0, delay: 0) {
-//                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) {
-//                    self.waitLabelcenterYConstraint.constant = 70
-//                    self.view.layoutIfNeeded()
-//                }
-//                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5) {
-//                    self.waitLabelcenterYConstraint.constant = 30
-//                    self.view.layoutIfNeeded()
-//                }
-//            }
-//            self.animator.addCompletion { position in
-//                if position == .end {
-//                    self.downAndUpLabel()
-//                }
-//            }
-//        })
-//        self.animator.startAnimation()
+        self.animator = UIViewPropertyAnimator(duration: 2.0, curve: .linear, animations: {
+            UIView.animateKeyframes(withDuration: 2.0, delay: 0) {
+                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) {
+                    self.waitLabelcenterYConstraint.constant = 70
+                    self.view.layoutIfNeeded()
+                }
+                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5) {
+                    self.waitLabelcenterYConstraint.constant = 30
+                    self.view.layoutIfNeeded()
+                }
+            }
+            self.animator.addCompletion { position in
+                if position == .end {
+                    self.downAndUpLabel()
+                }
+            }
+        })
+        self.animator.startAnimation()
     }
     
     func update() {

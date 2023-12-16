@@ -38,12 +38,20 @@ final class ProductViewController: UIViewController {
         productView.likeButton.addTarget(self, action: #selector(tapLike), for: .touchUpInside)
         
         presenter.setDetail()
+        presenter.checkIfBookIsLiked()
         setupNavigationBar()
     }
 }
 
 //MARK: - ProductViewProtocol
 extension ProductViewController: ProductViewProtocol {
+    
+    func setLikeButtonState(_ isLiked: Bool) {
+        DispatchQueue.main.async {
+            self.productView.likeButton.isSelected = isLiked
+        }
+    }
+    
     func getURL(_ url: String?) {
         guard let url = URL(string: "https://archive.org/details/\(url ?? "")/mode/2up?view=theater") else { return }
         let safariViewController = SFSafariViewController(url: url)
@@ -63,62 +71,67 @@ extension ProductViewController: ProductViewProtocol {
 }
 
 //MARK: - private Methods
-private extension ProductViewController {
-    @objc func addToListButtonTapped() {
+@objc private extension ProductViewController {
+    func addToListButtonTapped() {
         presenter.didTapAddToListButton()
     }
     
-    @objc func readButtonTapped() {
+    func readButtonTapped() {
         presenter.didTapReadButton()
     }
     
-    @objc func likeButtonTapped() {
-        presenter.didTapLikeButton()
+    func likeButtonTapped() {
+        
     }
     
-    @objc func tapLike(_ sender: UIButton) {
+    func tapLike(_ sender: UIButton) {
         sender.isSelected.toggle()
-    }
-    
-    func attributedString(from string: String, nonBoldRange: NSRange?) -> NSAttributedString {
-        let boldAttribute = [
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .semibold),
-        ]
-        let nonBoldAttribute = [
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14),
-        ]
-        let attrStr = NSMutableAttributedString(string: string, attributes: boldAttribute)
-        if let range = nonBoldRange {
-            attrStr.setAttributes(nonBoldAttribute, range: range)
-        }
-        return attrStr
-    }
-    
-    func configureRating(rating: Double) {
-        let ratingTitle = "Rating : " + String(format: "%.02f", rating) + "/5"
-        let ratingRange = NSMakeRange(0, "Rating :".count)
-        productView.rating.attributedText = attributedString(from: ratingTitle, nonBoldRange: ratingRange)
-    }
-    
-    func configure(details: BooksDetail) {
-        productView.booksName.text = details.title
-        let authorTitle = "Author : " + (presenter.book?.authorName?.first ?? "none")
-        let categoryTitle = "Category : " + (details.subjects?.first ?? "none")
+        sender.isSelected ? presenter.didTapLikeButton() : presenter.deleteLikedBook()
         
         
-        let authorRange = NSMakeRange(0, "Author :".count)
-        productView.author.attributedText = attributedString(from: authorTitle, nonBoldRange: authorRange)
-        
-        let categoryRange = NSMakeRange(0, "Category :".count)
-        productView.category.attributedText = attributedString(from: categoryTitle, nonBoldRange: categoryRange)
-        
-        productView.imageBook.kf.setImage(with: details.urlImage)
-        productView.booksDescription.text = details.description?.stringValue() ?? details.description?.createdValue()?.value ?? "Description is empty, sorry :("
-        
-        setupNavigationBar()
-    }
-    
-    func setupNavigationBar() {
-        setNavigation(title: presenter?.details?.subjects?.first ?? "")
     }
 }
+    private extension ProductViewController {
+        func attributedString(from string: String, nonBoldRange: NSRange?) -> NSAttributedString {
+            let boldAttribute = [
+                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .semibold),
+            ]
+            let nonBoldAttribute = [
+                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14),
+            ]
+            let attrStr = NSMutableAttributedString(string: string, attributes: boldAttribute)
+            if let range = nonBoldRange {
+                attrStr.setAttributes(nonBoldAttribute, range: range)
+            }
+            return attrStr
+        }
+        
+        func configureRating(rating: Double) {
+            let ratingTitle = "Rating : " + String(format: "%.02f", rating) + "/5"
+            let ratingRange = NSMakeRange(0, "Rating :".count)
+            productView.rating.attributedText = attributedString(from: ratingTitle, nonBoldRange: ratingRange)
+        }
+        
+        func configure(details: BooksDetail) {
+            productView.booksName.text = details.title
+            let authorTitle = "Author : " + (presenter.book?.authorName?.first ?? "none")
+            let categoryTitle = "Category : " + (details.subjects?.first ?? "none")
+            
+            
+            let authorRange = NSMakeRange(0, "Author :".count)
+            productView.author.attributedText = attributedString(from: authorTitle, nonBoldRange: authorRange)
+            
+            let categoryRange = NSMakeRange(0, "Category :".count)
+            productView.category.attributedText = attributedString(from: categoryTitle, nonBoldRange: categoryRange)
+            
+            productView.imageBook.kf.setImage(with: details.urlImage)
+            productView.booksDescription.text = details.description?.stringValue() ?? details.description?.createdValue()?.value ?? "Description is empty, sorry :("
+            
+            setupNavigationBar()
+        }
+        
+        func setupNavigationBar() {
+            setNavigation(title: presenter?.details?.subjects?.first ?? "")
+        }
+    }
+

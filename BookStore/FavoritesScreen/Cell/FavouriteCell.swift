@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class FavouriteCell: UICollectionViewCell {
     
@@ -63,11 +64,10 @@ final class FavouriteCell: UICollectionViewCell {
         ])
     }
     
-    func config(book: BookModel, image: UIImage) {
-        self.genre.text = book.genre
-        self.bookName.text = book.bookName
-        self.author.text = book.author
-        self.bookImage.image = image
+    func config(book: Work) {
+        self.bookName.text = book.title
+        self.author.text = book.authorName?.first
+        self.bookImage.kf.setImage(with: book.urlImage)
     }
 
     @objc private func deleteButtonAction() {

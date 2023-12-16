@@ -11,11 +11,10 @@ final class FavoritesViewController: UIViewController {
     
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 320, height: 140)
+        layout.itemSize = CGSize(width: 320, height: 142)
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
     }()
     private let image = UIImage(named: "book")!
-    
     
     //MARK: - Presenter
     var presenter: FavoritesPresenterProtocol!
@@ -31,6 +30,12 @@ final class FavoritesViewController: UIViewController {
         collectionView.delegate = self
         title = "Likes"
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.getLikedBooks()
+        reloadData()
     }
     //Register Cell
     private func registerCell() {
@@ -56,6 +61,12 @@ final class FavoritesViewController: UIViewController {
 //MARK: - FavoritesViewProtocol
 extension FavoritesViewController: FavoritesViewProtocol {
     
+    func openProduct(with model: Work) {
+        let vc = Builder.createProductVC(book: model)
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    
     //Delete Cell
     func deleteItem(at indexPath: IndexPath) {
         
@@ -63,7 +74,7 @@ extension FavoritesViewController: FavoritesViewProtocol {
         
         // Remove cell with animation
         collectionView.performBatchUpdates {
-            self.presenter.models.remove(at: indexPath.row)
+            self.presenter.book?.remove(at: indexPath.row)
             collectionView.deleteItems(at: [indexPath])
         }
     }
@@ -77,15 +88,17 @@ extension FavoritesViewController: FavoritesViewProtocol {
 //MARK: - DataSource
 extension FavoritesViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        presenter.models.count
+        guard let book = presenter.book else { return 0 }
+        return book.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FavouriteCell.identifier, for: indexPath) as? FavouriteCell else {
             return UICollectionViewCell()
         }
-        let book = presenter.getBook(with: indexPath)
-        cell.config(book: book, image: image)
+        if let book = presenter.getBook(with: indexPath) {
+            cell.config(book: book)
+        }
         //Remove cell
         cell.deleteButtonTapped = {
             // Get the current indexPath for the cell at the time of clicking
@@ -100,6 +113,9 @@ extension FavoritesViewController: UICollectionViewDataSource {
     
 }
 
+//MARK: - UICollectionView Delegate
 extension FavoritesViewController: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        presenter.didSelectItemAt(indexPath: indexPath)
+    }
 }

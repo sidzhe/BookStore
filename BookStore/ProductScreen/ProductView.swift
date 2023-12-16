@@ -21,6 +21,8 @@ protocol IProductView: UIView {
 }
 
 final class ProductView: UIView, IProductView {
+
+    
     //MARK: - Views
     
     var likeButton: UIButton = {
