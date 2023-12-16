@@ -9,43 +9,50 @@ import UIKit
 
 final class FavoritesViewController: UIViewController {
     
+    //MARK: - Presenter
+    var presenter: FavoritesPresenterProtocol!
+    
+    //MARK: - UI Elements
+    private let image = UIImage(named: "book")!
+    
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 320, height: 142)
+        layout.minimumLineSpacing = 20
         return UICollectionView(frame: .zero, collectionViewLayout: layout)
     }()
-    private let image = UIImage(named: "book")!
-    
-    //MARK: - Presenter
-    var presenter: FavoritesPresenterProtocol!
     
     //MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter = FavoritesPresenter(view: self)
+        
         setupView()
         setupConst()
         registerCell()
         collectionView.dataSource = self
         collectionView.delegate = self
-        title = "Likes"
         
     }
     
+    //MARK: - viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         presenter.getLikedBooks()
         reloadData()
     }
+    
     //Register Cell
     private func registerCell() {
         collectionView.register(FavouriteCell.self, forCellWithReuseIdentifier: FavouriteCell.identifier)
     }
+    
     //View Config
     private func setupView() {
+        title = "Likes"
         view.addSubViews(collectionView)
         view.backgroundColor = .white
     }
+    
     //Layout
     private func setupConst() {
         NSLayoutConstraint.activate([
@@ -66,18 +73,15 @@ extension FavoritesViewController: FavoritesViewProtocol {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    
     //Delete Cell
     func deleteItem(at indexPath: IndexPath) {
-        
-        print(indexPath)
-        
         // Remove cell with animation
         collectionView.performBatchUpdates {
             self.presenter.book?.remove(at: indexPath.row)
             collectionView.deleteItems(at: [indexPath])
         }
     }
+    
     //UICollectionView UI update
     func reloadData() {
         collectionView.reloadData()
@@ -105,12 +109,10 @@ extension FavoritesViewController: UICollectionViewDataSource {
             if let currentIndexPath = collectionView.indexPath(for: cell) {
                 self.presenter.removeItem(at: currentIndexPath)
             }
-            
         }
-        return cell
         
+        return cell
     }
-    
 }
 
 //MARK: - UICollectionView Delegate

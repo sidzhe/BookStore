@@ -12,16 +12,16 @@ final class BookCell: UICollectionViewCell {
     
     private let topView = UIView(backgroundColor: .systemGray3)
     private let bottomView = UIView(backgroundColor: .black)
-
+    
     private let bookImage = UIImageView()
-
+    
     private let genre = UILabel(font: .systemFont(ofSize: 10), textColor: .white)
     private let bookName = UILabel(font: .boldSystemFont(ofSize: 15), textColor: .white)
     private let author = UILabel(font: .boldSystemFont(ofSize: 10), textColor: .white)
-
+    
     private lazy var stackView = UIStackView(.vertical, 5, .fill, .equalSpacing, [genre, bookName, author])
-
-
+    
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -31,7 +31,7 @@ final class BookCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     private func setupView() {
         contentView.addSubViews(topView, bottomView)
         bottomView.addSubViews(stackView)
@@ -65,19 +65,18 @@ final class BookCell: UICollectionViewCell {
     }
     
     func config(book: Work) {
-//        self.genre.text = book.ia_collection_s
         if let title = book.title {
             self.bookName.text = limitWords(toFive: title)
         }
         self.author.text = book.authorName?.first
         self.bookImage.kf.setImage(with: book.urlImage)
-
+        
     }
-
-   private func limitWords(toFive input: String) -> String {
+    
+    private func limitWords(toFive input: String) -> String {
         let words = input.split(separator: " ")
         let firstFiveWords = words.prefix(5)
         return firstFiveWords.joined(separator: " ")
     }
-
+    
 }

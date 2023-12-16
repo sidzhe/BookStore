@@ -35,7 +35,7 @@ final class HomeViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateWithData()
-//        presenter.viewDidLoad()
+        //        presenter.viewDidLoad()
         
     }
     
@@ -80,15 +80,15 @@ final class HomeViewController: UIViewController {
         ])
     }
     
-//    private func configureWaitLabel() {
-//        view.addSubViews(waitLabel)
-//        waitLabel.text = "Ожидайте"
-//        waitLabelcenterYConstraint = waitLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 30)
-//        NSLayoutConstraint.activate([
-//            waitLabelcenterYConstraint,
-//            waitLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-//        ])
-//    }
+    //    private func configureWaitLabel() {
+    //        view.addSubViews(waitLabel)
+    //        waitLabel.text = "Ожидайте"
+    //        waitLabelcenterYConstraint = waitLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 30)
+    //        NSLayoutConstraint.activate([
+    //            waitLabelcenterYConstraint,
+    //            waitLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+    //        ])
+    //    }
     
     //MARK: - Layout
     private func createLayout() -> UICollectionViewLayout {

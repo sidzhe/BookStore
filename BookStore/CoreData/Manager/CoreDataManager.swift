@@ -10,16 +10,16 @@ import CoreData
 
 class CoreDataManager {
     
+    //MARK: - Properties
     static let shared = CoreDataManager()
-    
-    private init() {}
-    
     var viewContext: NSManagedObjectContext {
         return persistentContainer.viewContext
     }
     
-    // MARK: - Core Data stack
+    //MARK: - Init
+    private init() {}
     
+    // MARK: - Core Data stack
     lazy var persistentContainer: NSPersistentContainer = {
         
         let container = NSPersistentContainer(name: "BookCoreData")
@@ -32,7 +32,6 @@ class CoreDataManager {
     }()
     
     // MARK: - Core Data Saving support
-    
     func saveContext () {
         let context = persistentContainer.viewContext
         if context.hasChanges {
@@ -94,6 +93,7 @@ class CoreDataManager {
         let work = result.map { Work(key: $0.iaCollection, title: $0.title, coverEditionKey: nil, cover_i: $0.imageUrl, authorName: [$0.authorName ?? ""]) }
         return work.reversed()
     }
+    
     //MARK: - Get liked book
     func getLikedBook() -> [Work]? {
         let likedBookRequest = LikedBooks.fetchRequest()
@@ -108,6 +108,7 @@ class CoreDataManager {
             return []
         }
     }
+    
     //MARK: - Is book liked
     func isBookLiked(bookKey: String) -> Bool {
         let fetchRequest: NSFetchRequest<LikedBooks> = LikedBooks.fetchRequest()
@@ -131,6 +132,7 @@ class CoreDataManager {
             try viewContext.save()
         }
     }
+    
     //MARK: - Delete liked book
     func deleteLiked(_ book: LikedBooks) throws {
         viewContext.delete(book)
@@ -152,8 +154,5 @@ class CoreDataManager {
             print(error.localizedDescription)
             return
         }
-
     }
-    
-    
 }

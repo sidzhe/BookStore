@@ -29,38 +29,41 @@ protocol FavoritesPresenterProtocol: AnyObject {
 
 //MARK: - FavoritesPresenter
 final class FavoritesPresenter: FavoritesPresenterProtocol {
+    
+    //MARK: - Properties
+    weak var view: FavoritesViewProtocol?
+    var book: [Work]?
+    var coreData = CoreDataManager.shared
+    
     //MARK: - Init
     required init(view: FavoritesViewProtocol) {
         self.view = view
         getLikedBooks()
         
     }
-    //MARK: - Properties
-    weak var view: FavoritesViewProtocol?
-    
-    var book: [Work]?
-    var coreData = CoreDataManager.shared
     
     //Логика получения книги
     func getBook(with indexPath: IndexPath) -> Work? {
-            return book?[indexPath.row]
+        return book?[indexPath.row]
     }
+    
     func getLikedBooks() {
         book = coreData.getLikedBook()
         print("Обновленные данные: \(String(describing: book))")
     }
+    
     //Логика удаления ячейки
     func removeItem(at indexPath: IndexPath) {
         guard let book = book else { return }
-            guard indexPath.row < book.count else { return }
-            // Сообщаем контроллеру о необходимости обновления
-            if book.isEmpty {
-                view?.reloadData() // Метод для перезагрузки данных в коллекции
-            } else {
-                view?.deleteItem(at: indexPath) // Метод для удаления элемента
-                coreData.deleteLikeBook(from: book[indexPath.row])
-            }
+        guard indexPath.row < book.count else { return }
+        // Сообщаем контроллеру о необходимости обновления
+        if book.isEmpty {
+            view?.reloadData() // Метод для перезагрузки данных в коллекции
+        } else {
+            view?.deleteItem(at: indexPath) // Метод для удаления элемента
+            coreData.deleteLikeBook(from: book[indexPath.row])
         }
+    }
     
     func didSelectItemAt(indexPath: IndexPath) {
         guard let selectedBook = book else { return }

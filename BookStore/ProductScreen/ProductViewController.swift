@@ -91,47 +91,47 @@ extension ProductViewController: ProductViewProtocol {
         
     }
 }
-    private extension ProductViewController {
-        func attributedString(from string: String, nonBoldRange: NSRange?) -> NSAttributedString {
-            let boldAttribute = [
-                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .semibold),
-            ]
-            let nonBoldAttribute = [
-                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14),
-            ]
-            let attrStr = NSMutableAttributedString(string: string, attributes: boldAttribute)
-            if let range = nonBoldRange {
-                attrStr.setAttributes(nonBoldAttribute, range: range)
-            }
-            return attrStr
+private extension ProductViewController {
+    func attributedString(from string: String, nonBoldRange: NSRange?) -> NSAttributedString {
+        let boldAttribute = [
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .semibold),
+        ]
+        let nonBoldAttribute = [
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14),
+        ]
+        let attrStr = NSMutableAttributedString(string: string, attributes: boldAttribute)
+        if let range = nonBoldRange {
+            attrStr.setAttributes(nonBoldAttribute, range: range)
         }
-        
-        func configureRating(rating: Double) {
-            let ratingTitle = "Rating : " + String(format: "%.02f", rating) + "/5"
-            let ratingRange = NSMakeRange(0, "Rating :".count)
-            productView.rating.attributedText = attributedString(from: ratingTitle, nonBoldRange: ratingRange)
-        }
-        
-        func configure(details: BooksDetail) {
-            productView.booksName.text = details.title
-            let authorTitle = "Author : " + (presenter.book?.authorName?.first ?? "none")
-            let categoryTitle = "Category : " + (details.subjects?.first ?? "none")
-            
-            
-            let authorRange = NSMakeRange(0, "Author :".count)
-            productView.author.attributedText = attributedString(from: authorTitle, nonBoldRange: authorRange)
-            
-            let categoryRange = NSMakeRange(0, "Category :".count)
-            productView.category.attributedText = attributedString(from: categoryTitle, nonBoldRange: categoryRange)
-            
-            productView.imageBook.kf.setImage(with: details.urlImage)
-            productView.booksDescription.text = details.description?.stringValue() ?? details.description?.createdValue()?.value ?? "Description is empty, sorry :("
-            
-            setupNavigationBar()
-        }
-        
-        func setupNavigationBar() {
-            setNavigation(title: presenter?.details?.subjects?.first ?? "")
-        }
+        return attrStr
     }
+    
+    func configureRating(rating: Double) {
+        let ratingTitle = "Rating : " + String(format: "%.02f", rating) + "/5"
+        let ratingRange = NSMakeRange(0, "Rating :".count)
+        productView.rating.attributedText = attributedString(from: ratingTitle, nonBoldRange: ratingRange)
+    }
+    
+    func configure(details: BooksDetail) {
+        productView.booksName.text = details.title
+        let authorTitle = "Author : " + (presenter.book?.authorName?.first ?? "none")
+        let categoryTitle = "Category : " + (details.subjects?.first ?? "none")
+        
+        
+        let authorRange = NSMakeRange(0, "Author :".count)
+        productView.author.attributedText = attributedString(from: authorTitle, nonBoldRange: authorRange)
+        
+        let categoryRange = NSMakeRange(0, "Category :".count)
+        productView.category.attributedText = attributedString(from: categoryTitle, nonBoldRange: categoryRange)
+        
+        productView.imageBook.kf.setImage(with: details.urlImage)
+        productView.booksDescription.text = details.description?.stringValue() ?? details.description?.createdValue()?.value ?? "Description is empty, sorry :("
+        
+        setupNavigationBar()
+    }
+    
+    func setupNavigationBar() {
+        setNavigation(title: presenter?.details?.subjects?.first ?? "")
+    }
+}
 

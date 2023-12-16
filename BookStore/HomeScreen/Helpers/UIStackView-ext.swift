@@ -22,7 +22,7 @@ extension UIStackView {
                      _ distribution: UIStackView.Distribution,
                      _ addArrangedSubViews: [UIView]
     ) {
-
+        
         self.init(arrangedSubviews: addArrangedSubViews)
         
         self.axis = axis

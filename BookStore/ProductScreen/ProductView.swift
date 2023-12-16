@@ -21,12 +21,12 @@ protocol IProductView: UIView {
 }
 
 final class ProductView: UIView, IProductView {
-
+    
     
     //MARK: - Views
     
     var likeButton: UIButton = {
-       let button = UIButton()
+        let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
         button.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .selected)
         button.tintColor = .black

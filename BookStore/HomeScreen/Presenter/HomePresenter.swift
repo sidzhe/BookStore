@@ -31,7 +31,7 @@ final class HomePresenter: HomePresenterProtocol {
     weak var view: HomeViewProtocol?
     var networkService: NetworkServiceProtocol
     var topBooks: [Work]?
-    var recentBooks: [Work]? 
+    var recentBooks: [Work]?
     var searhedBook: [Book]?
     var times = [TimeModel(times: "This Week", isSelected: true), TimeModel(times: "This Month"), TimeModel(times: "This Year")]
     

@@ -11,7 +11,7 @@ final class HeaderCell: UICollectionReusableView {
     
     //MARK: - Properties
     let label = UILabel()
-
+    
     
     //MARK: - Inits
     override init(frame: CGRect) {

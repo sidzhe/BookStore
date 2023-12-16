@@ -13,17 +13,18 @@ final class WantViewController: UIViewController {
     var presenter: WantPresenterProtocol!
     
     //MARK: - UI Elements
+    private let image = UIImage(named: "book")
+    
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 320, height: 140)
+        layout.itemSize = CGSize(width: 320, height: 142)
+        layout.minimumLineSpacing = 20
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.register(FavouriteCell.self, forCellWithReuseIdentifier: FavouriteCell.identifier)
         view.dataSource = self
         view.delegate = self
         return view
     }()
-    
-    private let image = UIImage(named: "book")!
     
     //MARK: - ViewDidLoad
     override func viewDidLoad() {
@@ -34,18 +35,18 @@ final class WantViewController: UIViewController {
         
     }
     
-    //MARK: - Setup UI
-    
-    private func setupNavagation() {
-        title = presenter.title
-        let buttonRigth = UIBarButtonItem(image: UIImage(named: "plus"), style: .plain, target: self, action: #selector(tapAdd))
-        let buttonLeft = UIBarButtonItem(image: UIImage(systemName: "arrow.left"), style: .plain, target: self, action: #selector(tapBack))
-        buttonRigth.tintColor = .black
-        buttonLeft.tintColor = .black
-        navigationItem.rightBarButtonItem = buttonRigth
-        navigationItem.leftBarButtonItem = buttonLeft
+    //MARK: - viewWillAppear
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        presenter.getLikedBooks()
+        reloadData()
+        
     }
+    
+    //View Config
     private func setupView() {
+        title = presenter.title
         view.backgroundColor = .white
         view.addSubViews(collectionView)
         
@@ -56,6 +57,16 @@ final class WantViewController: UIViewController {
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
     }
+    
+    private func setupNavagation() {
+          title = presenter.title
+          let buttonRigth = UIBarButtonItem(image: UIImage(named: "plus"), style: .plain, target: self, action: #selector(tapAdd))
+          let buttonLeft = UIBarButtonItem(image: UIImage(systemName: "arrow.left"), style: .plain, target: self, action: #selector(tapBack))
+          buttonRigth.tintColor = .black
+          buttonLeft.tintColor = .black
+          navigationItem.rightBarButtonItem = buttonRigth
+          navigationItem.leftBarButtonItem = buttonLeft
+      }
     
     @objc private func tapAdd() {
        
@@ -70,17 +81,24 @@ final class WantViewController: UIViewController {
 //MARK: - FavoritesViewProtocol
 extension WantViewController: WantViewProtocol {
     
+    func openProduct(with model: Work) {
+        let vc = Builder.createProductVC(book: model)
+        navigationController?.pushViewController(vc, animated: true)
+    }
     
+    
+    //Delete Cell
     func deleteItem(at indexPath: IndexPath) {
         
         print(indexPath)
         
+        // Remove cell with animation
         collectionView.performBatchUpdates {
-            self.presenter.models.remove(at: indexPath.row)
+            self.presenter.book?.remove(at: indexPath.row)
             collectionView.deleteItems(at: [indexPath])
         }
     }
-    
+    //UICollectionView UI update
     func reloadData() {
         collectionView.reloadData()
     }
@@ -90,15 +108,17 @@ extension WantViewController: WantViewProtocol {
 //MARK: - DataSource
 extension WantViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        presenter.models.count
+        guard let book = presenter.book else { return 0 }
+        return book.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FavouriteCell.identifier, for: indexPath) as? FavouriteCell else {
             return UICollectionViewCell()
         }
-        let book = presenter.getBook(with: indexPath)
-        cell.config(book: book, image: image)
+        if let book = presenter.getBook(with: indexPath) {
+            cell.config(book: book)
+        }
         //Remove cell
         cell.deleteButtonTapped = {
             // Get the current indexPath for the cell at the time of clicking
@@ -106,12 +126,14 @@ extension WantViewController: UICollectionViewDataSource {
                 self.presenter.removeItem(at: currentIndexPath)
             }
         }
-        return cell
         
+        return cell
     }
-    
 }
 
+//MARK: - UICollectionView Delegate
 extension WantViewController: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        presenter.didSelectItemAt(indexPath: indexPath)
+    }
 }

@@ -59,13 +59,13 @@ extension ProductPresenter: ProductPresenterProtocol {
         let isLiked = coreDataManager.isBookLiked(bookKey: book.key ?? "")
         view?.setLikeButtonState(isLiked)
     }
-
+    
     func didTapLikeButton() {
         guard let book = book else { return }
         print("Like")
         coreDataManager.saveLikedBook(from: book)
     }
-
+    
     func deleteLikedBook() {
         guard let book = book else { return }
         print("Unlike")

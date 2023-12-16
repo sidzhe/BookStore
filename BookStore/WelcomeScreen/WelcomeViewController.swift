@@ -87,7 +87,7 @@ final class WelcomeViewController: UIViewController {
         scrollView.setContentOffset(CGPoint(x: CGFloat(current) * view.frame.size.width,
                                             y: 0), animated: true)
     }
-        
+    
     private func setupUI() {
         view.backgroundColor = .white
         
@@ -137,7 +137,7 @@ final class WelcomeViewController: UIViewController {
         scrollView.isPagingEnabled = true
         for x in 0..<presenter.onboardingText.count {
             let page = UILabel(frame: CGRect(x: CGFloat(x) * view.frame.size.width, y: 0, width: view.frame.size.width,  height: scrollView.frame.size.height))
-
+            
             page.text = presenter.onboardingText[x]
             page.textAlignment = .center
             page.numberOfLines = 0
@@ -148,7 +148,7 @@ final class WelcomeViewController: UIViewController {
 
 //MARK: - WelcomePresenterProtocol
 extension WelcomeViewController: WelcomeViewProtocol {
-
+    
 }
 
 extension WelcomeViewController: UIScrollViewDelegate {

@@ -34,7 +34,7 @@ final class FavouriteCell: UICollectionViewCell {
     
     private func setupView() {
         contentView.addSubViews(bookImage, button, stackView)
-       
+        
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
         
@@ -69,7 +69,7 @@ final class FavouriteCell: UICollectionViewCell {
         self.author.text = book.authorName?.first
         self.bookImage.kf.setImage(with: book.urlImage)
     }
-
+    
     @objc private func deleteButtonAction() {
         deleteButtonTapped?()
     }
