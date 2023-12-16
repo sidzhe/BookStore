@@ -35,6 +35,7 @@ final class ProductViewController: UIViewController {
         
         productView.addToListButton.addTarget(self, action: #selector(addToListButtonTapped), for: .touchUpInside)
         productView.readButton.addTarget(self, action: #selector(readButtonTapped), for: .touchUpInside)
+        productView.likeButton.addTarget(self, action: #selector(tapLike), for: .touchUpInside)
         
         presenter.setDetail()
         setupNavigationBar()
@@ -73,6 +74,10 @@ private extension ProductViewController {
     
     @objc func likeButtonTapped() {
         presenter.didTapLikeButton()
+    }
+    
+    @objc func tapLike(_ sender: UIButton) {
+        sender.isSelected.toggle()
     }
     
     func attributedString(from string: String, nonBoldRange: NSRange?) -> NSAttributedString {
@@ -115,9 +120,5 @@ private extension ProductViewController {
     
     func setupNavigationBar() {
         setNavigation(title: presenter?.details?.subjects?.first ?? "")
-        
-        let button = UIBarButtonItem(image: UIImage(systemName: "heart"), style: .plain, target: self, action: #selector(likeButtonTapped))
-        button.tintColor = .black
-        navigationItem.rightBarButtonItem = button
     }
 }

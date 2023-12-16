@@ -52,13 +52,15 @@ final class AccountViewController: UIViewController, UINavigationControllerDeleg
         view.backgroundColor = .systemGray5
         view.clipsToBounds = true
         view.layer.cornerRadius = 5
+        view.layer.borderWidth = 0.5
+        view.layer.borderColor = UIColor.systemGray3.cgColor
         return view
     }()
     
     private lazy var labelButton: UILabel = {
         let label = UILabel()
-        label.text = "My lists"
-        label.textColor = .systemGray
+        label.text = "My lists:"
+        label.textColor = .systemGray2
         return label
     }()
     
@@ -140,7 +142,7 @@ final class AccountViewController: UIViewController, UINavigationControllerDeleg
     }
     
     @objc private func pushToViewContr() {
-        let listViewController = ListViewController()
+        let listViewController = Builder.createListVC()
         navigationController?.pushViewController(listViewController, animated: true)
     }
     
@@ -189,6 +191,8 @@ extension AccountViewController: UIImagePickerControllerDelegate {
             avatar.image = selectedImage
         } else if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             avatar.image = selectedImage
+            avatar.clipsToBounds = true
+            avatar.layer.cornerRadius = 50
         }
         dismiss(animated: true, completion: nil)
     }

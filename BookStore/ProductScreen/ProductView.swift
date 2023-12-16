@@ -17,10 +17,19 @@ protocol IProductView: UIView {
     var addToListButton: UIButton { get }
     var readButton: UIButton { get }
     var imageBook: UIImageView { get }
+    var likeButton: UIButton { get }
 }
 
 final class ProductView: UIView, IProductView {
     //MARK: - Views
+    
+    var likeButton: UIButton = {
+       let button = UIButton()
+        button.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
+        button.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .selected)
+        button.tintColor = .black
+        return button
+    }()
     
     let booksName: UILabel = {
         let label = UILabel()
@@ -98,7 +107,7 @@ final class ProductView: UIView, IProductView {
 private extension ProductView {
     func setupView() {
         backgroundColor = .white
-        addSubviews(booksName, imageBook, author, category, rating, addToListButton, readButton, descriptionHeader, booksDescription)
+        addSubviews(booksName, imageBook, author, category, rating, addToListButton, readButton, descriptionHeader, booksDescription, likeButton)
         disableSubviewsTamic()
         
     }
@@ -143,5 +152,11 @@ private extension ProductView {
             booksDescription.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
             booksDescription.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor)
         ])
+        
+        likeButton.snp.makeConstraints { make in
+            make.size.equalTo(35)
+            make.centerX.equalTo(readButton.snp.centerX)
+            make.top.equalTo(readButton.snp.bottom).inset(-15)
+        }
     }
 }
