@@ -20,7 +20,7 @@ final class WantViewController: UIViewController {
         layout.itemSize = CGSize(width: 320, height: 142)
         layout.minimumLineSpacing = 20
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        view.register(FavouriteCell.self, forCellWithReuseIdentifier: FavouriteCell.identifier)
+        view.register(WantToReadCell.self, forCellWithReuseIdentifier: WantToReadCell.id)
         view.dataSource = self
         view.delegate = self
         return view
@@ -39,7 +39,7 @@ final class WantViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        presenter.getLikedBooks()
+//        presenter.loadListItems()
         reloadData()
         
     }
@@ -69,7 +69,7 @@ final class WantViewController: UIViewController {
       }
     
     @objc private func tapAdd() {
-        let addBookVC = Builder.createAddBookVC()
+        let addBookVC = Builder.createAddBookVC(title: presenter.title)
         navigationController?.pushViewController(addBookVC, animated: true)
     }
     
@@ -82,9 +82,9 @@ final class WantViewController: UIViewController {
 //MARK: - FavoritesViewProtocol
 extension WantViewController: WantViewProtocol {
     
-    func openProduct(with model: Work) {
-        let vc = Builder.createProductVC(book: model)
-        navigationController?.pushViewController(vc, animated: true)
+    func openProduct(with model: Book) {
+//        let vc = Builder.createProductVC(book: model)
+//        navigationController?.pushViewController(vc, animated: true)
     }
     
     
@@ -114,7 +114,7 @@ extension WantViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FavouriteCell.identifier, for: indexPath) as? FavouriteCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WantToReadCell.id, for: indexPath) as? WantToReadCell else {
             return UICollectionViewCell()
         }
         if let book = presenter.getBook(with: indexPath) {

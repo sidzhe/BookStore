@@ -9,20 +9,16 @@ import Foundation
 
 //MARK: - Protocols
 protocol WantViewProtocol: AnyObject {
-    //Удаление ячейки
     func deleteItem(at indexPath: IndexPath)
-    //Обновление UI коллекции
     func reloadData()
-    func openProduct(with model: Work)
+    func openProduct(with model: Book)
 }
 
 protocol WantPresenterProtocol: AnyObject {
     var title: String { get }
-    var book: [Work]? { get set }
-    //Получение книги
-    func getBook(with indexPath: IndexPath) -> Work?
+    var book: [Book]? { get set }
+    func getBook(with indexPath: IndexPath) -> Book?
     func getLikedBooks()
-    //Удаление ячейки
     func removeItem(at indexPath: IndexPath)
     func didSelectItemAt(indexPath: IndexPath)
     init(view: WantViewProtocol, title: String)
@@ -33,7 +29,7 @@ final class WantPresenter: WantPresenterProtocol {
     
     //MARK: - Properties
     weak var view: WantViewProtocol?
-    var book: [Work]?
+    var book: [Book]?
     var coreData = CoreDataManager.shared
     var title: String
     
@@ -46,12 +42,11 @@ final class WantPresenter: WantPresenterProtocol {
     }
     
     //Логика получения книги
-    func getBook(with indexPath: IndexPath) -> Work? {
+    func getBook(with indexPath: IndexPath) -> Book? {
         return book?[indexPath.row]
     }
     func getLikedBooks() {
-        book = coreData.getLikedBook()
-        print("Обновленные данные: \(String(describing: book))")
+        book = coreData.loadListItems(parentCategory: title)
     }
     //Логика удаления ячейки
     func removeItem(at indexPath: IndexPath) {
@@ -62,7 +57,8 @@ final class WantPresenter: WantPresenterProtocol {
             view?.reloadData() // Метод для перезагрузки данных в коллекции
         } else {
             view?.deleteItem(at: indexPath) // Метод для удаления элемента
-            coreData.deleteLikeBook(from: book[indexPath.row])
+//            coreData.deleteLikeBook(from: book[indexPath.row])
+            coreData.deleteLikeBook(from: Work(key: nil, title: nil, coverEditionKey: nil, cover_i: nil, authorName: nil))
         }
     }
     

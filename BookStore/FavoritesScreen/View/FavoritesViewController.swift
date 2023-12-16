@@ -37,8 +37,10 @@ final class FavoritesViewController: UIViewController {
     //MARK: - viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         presenter.getLikedBooks()
         reloadData()
+        
     }
     
     //Register Cell

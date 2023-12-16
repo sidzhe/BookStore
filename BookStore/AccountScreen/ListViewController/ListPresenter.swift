@@ -27,6 +27,7 @@ final class ListPresenter: ListPresenterProtocol {
     required init(view: ListViewProtocol) {
         self.view = view
         loadList()
+
     }
     
     func saveList(listName: String) {

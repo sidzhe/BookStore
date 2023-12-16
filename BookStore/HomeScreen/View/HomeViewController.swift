@@ -160,7 +160,6 @@ final class HomeViewController: UIViewController {
             header.titleLabel.text = "Top Books"
             header.isUserInteractionEnabled = true
             header.button.tag = indexPath.section
-            print(indexPath.section, "<-- Top Books")
             header.button.addTarget(self, action: #selector(self.seeMoreTopBooksAction(_:)), for: .touchUpInside)
         }
     }
@@ -170,7 +169,6 @@ final class HomeViewController: UIViewController {
             header.titleLabel.text = "Recent Books"
             header.isUserInteractionEnabled = true
             header.button.tag = indexPath.section
-            print(indexPath.section, "<-- Recent Books")
             header.button.addTarget(self, action: #selector(self.seeMoreTopBooksAction(_:)), for: .touchUpInside)
 
         }

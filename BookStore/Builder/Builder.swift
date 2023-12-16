@@ -95,10 +95,10 @@ final class Builder {
     }
     
     //AddBookVC
-    static func createAddBookVC() -> UIViewController {
+    static func createAddBookVC(title: String) -> UIViewController {
         let view = AddBookViewController()
         let networkService = NetworkService()
-        let presenter = AddBookPresenter(view: view, networkService: networkService)
+        let presenter = AddBookPresenter(view: view, networkService: networkService, title: title)
         view.presenter = presenter
         return view
     }

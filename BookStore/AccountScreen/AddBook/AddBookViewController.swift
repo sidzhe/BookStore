@@ -29,7 +29,7 @@ final class AddBookViewController: UIViewController {
     private lazy var searchBar: UISearchController = {
         let searchBar = UISearchController(searchResultsController: nil)
         searchBar.searchBar.delegate = self
-        searchBar.obscuresBackgroundDuringPresentation = false
+        searchBar.obscuresBackgroundDuringPresentation = true
         searchBar.searchBar.placeholder = "Search book"
         searchBar.searchBar.searchTextField.clearButtonMode = .always
         searchBar.automaticallyShowsCancelButton = false
@@ -70,6 +70,7 @@ final class AddBookViewController: UIViewController {
     }
     
     private func setupNavagation() {
+        title = presenter.title
         navigationItem.searchController = searchBar
         navigationItem.hidesSearchBarWhenScrolling = false
         
@@ -102,7 +103,12 @@ extension AddBookViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AddBookCell.id, for: indexPath) as? AddBookCell
         guard let model = presenter.book else { return UICollectionViewCell () }
-        cell?.config(book: model[indexPath.row])
+        var state = CoreDataManager.shared.isBookList(bookKey: model[indexPath.row].key ?? "")
+        cell?.addListCallBack = { [weak self] in
+            let book = model[indexPath.row]
+            CoreDataManager.shared.saveListBook(from: book, parentName: self?.title ?? "")
+        }
+        cell?.config(book: model[indexPath.row], state: state)
         return cell ?? UICollectionViewCell()
     }
 }
