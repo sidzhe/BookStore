@@ -35,7 +35,6 @@ final class HomeViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateWithData()
-        //        presenter.viewDidLoad()
         
     }
     
@@ -79,16 +78,6 @@ final class HomeViewController: UIViewController {
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
     }
-    
-    //    private func configureWaitLabel() {
-    //        view.addSubViews(waitLabel)
-    //        waitLabel.text = "Ожидайте"
-    //        waitLabelcenterYConstraint = waitLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 30)
-    //        NSLayoutConstraint.activate([
-    //            waitLabelcenterYConstraint,
-    //            waitLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-    //        ])
-    //    }
     
     //MARK: - Layout
     private func createLayout() -> UICollectionViewLayout {
@@ -167,14 +156,59 @@ final class HomeViewController: UIViewController {
     }
     
     private func registerTopHeader() -> UICollectionView.SupplementaryRegistration<SectionHeader> {
-        return UICollectionView.SupplementaryRegistration<SectionHeader>(elementKind: UICollectionView.elementKindSectionHeader) { header, _, _ in
+        return UICollectionView.SupplementaryRegistration<SectionHeader>(elementKind: UICollectionView.elementKindSectionHeader) { header, _, indexPath in
             header.titleLabel.text = "Top Books"
+            header.isUserInteractionEnabled = true
+            header.button.tag = indexPath.section
+            print(indexPath.section, "<-- Top Books")
+            header.button.addTarget(self, action: #selector(self.seeMoreTopBooksAction(_:)), for: .touchUpInside)
         }
     }
     
     private func registerRecentHeader() -> UICollectionView.SupplementaryRegistration<SectionHeader> {
-        return UICollectionView.SupplementaryRegistration<SectionHeader>(elementKind: UICollectionView.elementKindSectionHeader) { header, _, _ in
+        return UICollectionView.SupplementaryRegistration<SectionHeader>(elementKind: UICollectionView.elementKindSectionHeader) { header, _, indexPath in
             header.titleLabel.text = "Recent Books"
+            header.isUserInteractionEnabled = true
+            header.button.tag = indexPath.section
+            print(indexPath.section, "<-- Recent Books")
+            header.button.addTarget(self, action: #selector(self.seeMoreTopBooksAction(_:)), for: .touchUpInside)
+
+        }
+    }
+    //MARK: - Action for See More button
+    @objc private func seeMoreTopBooksAction(_ sender: UIButton) {
+        sender.isSelected.toggle()
+        switch sender.tag {
+        case 0: // Для секции Top Books
+            if sender.isSelected {
+                sender.setTitle("Hide", for: .normal)
+                UIView.animate(withDuration: 0.5) {
+                    let newLayout = self.createVerticalLayout() // Вертикальный макет для Top Books
+                    self.collectionView.setCollectionViewLayout(newLayout, animated: true)
+                }
+            } else {
+                UIView.animate(withDuration: 0.5) {
+                    sender.setTitle("See More", for: .normal)
+                    let newLayout = self.createLayout() // Обычный макет
+                    self.collectionView.setCollectionViewLayout(newLayout, animated: true)
+                }
+            }
+        case 2: // Для секции Recent Books
+            if sender.isSelected {
+                sender.setTitle("Hide", for: .normal)
+                UIView.animate(withDuration: 0.5) {
+                    let newLayout = self.createVerticalRecent() // Вертикальный макет для Recent Books
+                    self.collectionView.setCollectionViewLayout(newLayout, animated: true)
+                }
+            } else {
+                UIView.animate(withDuration: 0.5) {
+                    sender.setTitle("See More", for: .normal)
+                    let newLayout = self.createLayout() // Обычный макет
+                    self.collectionView.setCollectionViewLayout(newLayout, animated: true)
+                }
+            }
+        default:
+            break
         }
     }
     
@@ -326,3 +360,144 @@ extension HomeViewController:  UICollectionViewDelegate {
 }
 
 
+//MARK: - Методы для изменения секций
+extension HomeViewController {
+    //MARK: - Top Books
+    private func createVerticalLayout() -> UICollectionViewLayout {
+        UICollectionViewCompositionalLayout { sectionIndex, _ -> NSCollectionLayoutSection? in
+            guard let sectionKind = Section(rawValue: sectionIndex) else { return nil }
+            
+            let section: NSCollectionLayoutSection
+            
+            switch sectionKind {
+            case .time:
+                // Создаем секцию для временных интервалов (This Week, This Month, This Year)
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+                
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.33), heightDimension: .absolute(50))
+                let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+                
+                section = NSCollectionLayoutSection(group: group)
+                section.orthogonalScrollingBehavior = .continuous
+                // Добавляем заголовок к секции
+                let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
+                let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+                header.pinToVisibleBounds = false
+                header.zIndex = 2
+                
+                section.boundarySupplementaryItems = [header]
+                return section
+                
+            case .topBooks:
+                
+                let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(175), heightDimension: .absolute(230))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 5, bottom: 10, trailing: 5)
+
+                // 2. Создаем две вертикальные группы (колонки)
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .estimated(100))
+                let group1 = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+                let group2 = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+
+                // 3. Создаем горизонтальную группу, которая содержит две вертикальные группы
+                let horizontalGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(200))
+                let horizontalGroup = NSCollectionLayoutGroup.horizontal(layoutSize: horizontalGroupSize, subitems: [group1, group2])
+
+                // 4. Создаем секцию с использованием горизонтальной группы
+                let section = NSCollectionLayoutSection(group: horizontalGroup)
+
+                return section
+                
+            case .recentBooks:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(175), heightDimension: .absolute(230))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 5, bottom: 10, trailing: 5)
+                
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .estimated(220))
+                let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+                
+                section = NSCollectionLayoutSection(group: group)
+                section.orthogonalScrollingBehavior = .continuous
+                
+                let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
+                let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+                header.pinToVisibleBounds = false
+                header.zIndex = 2
+                section.boundarySupplementaryItems = [header]
+                
+                return section
+            }
+        }
+    }
+    
+    
+   //MARK: - Recent Books
+    private func createVerticalRecent() -> UICollectionViewLayout {
+        UICollectionViewCompositionalLayout { sectionIndex, _ -> NSCollectionLayoutSection? in
+            guard let sectionKind = Section(rawValue: sectionIndex) else { return nil }
+            
+            let section: NSCollectionLayoutSection
+            
+            switch sectionKind {
+            case .time:
+                // Создаем секцию для временных интервалов (This Week, This Month, This Year)
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+                
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.33), heightDimension: .absolute(50))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                
+                section = NSCollectionLayoutSection(group: group)
+                section.orthogonalScrollingBehavior = .continuous
+                // Добавляем заголовок к секции
+                let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
+                let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+                header.pinToVisibleBounds = false
+                header.zIndex = 2
+                
+                section.boundarySupplementaryItems = [header]
+                return section
+                
+            case .topBooks:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(175), heightDimension: .absolute(230))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 5, bottom: 10, trailing: 5)
+                
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .estimated(220))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                
+                section = NSCollectionLayoutSection(group: group)
+                section.orthogonalScrollingBehavior = .continuous
+                
+                return section
+                
+            case .recentBooks:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(175), heightDimension: .absolute(230))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 5, bottom: 10, trailing: 5)
+
+                // 2. Создаем две вертикальные группы (колонки)
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .estimated(100))
+                let group1 = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+                let group2 = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+
+                // 3. Создаем горизонтальную группу, которая содержит две вертикальные группы
+                let horizontalGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(200))
+                let horizontalGroup = NSCollectionLayoutGroup.horizontal(layoutSize: horizontalGroupSize, subitems: [group1, group2])
+
+                let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
+                let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+                header.pinToVisibleBounds = false
+                header.zIndex = 2
+                // 4. Создаем секцию с использованием горизонтальной группы
+                let section = NSCollectionLayoutSection(group: horizontalGroup)
+                section.boundarySupplementaryItems = [header]
+
+                return section
+            }
+        }
+    }
+}
