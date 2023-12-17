@@ -26,7 +26,6 @@ final class SectionHeader: UICollectionReusableView {
     
     private func configure() {
         addSubViews(titleLabel, button)
-//        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
             titleLabel.heightAnchor.constraint(equalToConstant: 20),
@@ -36,14 +35,10 @@ final class SectionHeader: UICollectionReusableView {
             button.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             button.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
-        button.setTitle("See more", for: .normal)
+        button.setTitle(button.isSelected ? "Hide" : "See More", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14)
         button.setTitleColor(.black, for: .normal)
         button.isUserInteractionEnabled = true
         titleLabel.font = .boldSystemFont(ofSize: 20)
     }
-    
-//    @objc private func buttonTupped() {
-//        buttonAction?()
-//    }
 }

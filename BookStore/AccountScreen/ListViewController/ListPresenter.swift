@@ -21,7 +21,7 @@ final class ListPresenter: ListPresenterProtocol {
     
     //MARK: - Properties
     weak var view: ListViewProtocol?
-    var data = ["Want to read", "Classic books", "Read for fun"]
+    var data: [String] = []
     
     //MARK: - Init
     required init(view: ListViewProtocol) {

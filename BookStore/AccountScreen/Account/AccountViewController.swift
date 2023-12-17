@@ -45,6 +45,8 @@ final class AccountViewController: UIViewController, UINavigationControllerDeleg
         let avatar = UIImageView()
         avatar.image = UIImage(systemName: "person.circle.fill")
         avatar.tintColor = .black
+        avatar.clipsToBounds = true
+        avatar.layer.cornerRadius = 75
         return avatar
     }()
     
@@ -208,8 +210,6 @@ extension AccountViewController: UIImagePickerControllerDelegate {
             avatar.image = selectedImage
         } else if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             avatar.image = selectedImage
-            avatar.clipsToBounds = true
-            avatar.layer.cornerRadius = 50
         }
         dismiss(animated: true, completion: nil)
     }

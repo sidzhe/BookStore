@@ -38,9 +38,9 @@ final class WantViewController: UIViewController {
     //MARK: - viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-//        presenter.loadListItems()
-        reloadData()
+
+        presenter.getLikedBooks()
+        collectionView.reloadData()
         
     }
     
@@ -90,9 +90,6 @@ extension WantViewController: WantViewProtocol {
     
     //Delete Cell
     func deleteItem(at indexPath: IndexPath) {
-        
-        print(indexPath)
-        
         // Remove cell with animation
         collectionView.performBatchUpdates {
             self.presenter.book?.remove(at: indexPath.row)

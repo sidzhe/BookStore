@@ -37,7 +37,7 @@ final class WantPresenter: WantPresenterProtocol {
     required init(view: WantViewProtocol, title: String) {
         self.view = view
         self.title = title
-        getLikedBooks()
+//        getLikedBooks()
         
     }
     
