@@ -36,7 +36,7 @@ final class SectionHeader: UICollectionReusableView {
             button.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             button.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
-        button.setTitle("See more", for: .normal)
+        button.setTitle(button.isSelected ? "Hide" : "See More", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14)
         button.setTitleColor(.black, for: .normal)
         button.isUserInteractionEnabled = true

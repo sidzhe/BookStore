@@ -69,14 +69,17 @@ final class HomeViewController: UIViewController {
     
     //MARK: - ActivityIndicator & WaitLabel
     private func configureActivityIndicator() {
-        view.addSubViews(activityIndicator)
-        activityIndicator.startAnimating()
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.color = .label
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(activityIndicator)
+        
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
+        view.layoutIfNeeded()
+        activityIndicator.startAnimating()
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.color = .label
     }
     
     //MARK: - Layout
