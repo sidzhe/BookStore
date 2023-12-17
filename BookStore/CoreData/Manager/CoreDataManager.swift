@@ -68,20 +68,17 @@ class CoreDataManager {
     
     //MARK: - Save liked Book
     func saveLikedBook(from model: Work) -> Bool {
-        print("saveLiked вызван", "сохраняемая модель -> \(model)")
         let likedBook = LikedBooks(context: viewContext)
         likedBook.author = model.authorName?.first
         likedBook.title = model.title
         likedBook.coverI = Int64(model.cover_i ?? 0)
         likedBook.key = model.key
         likedBook.isSelected = true
-
+        
         do {
-            print("данные сохранены в кордате")
             try viewContext.save()
             return true
         } catch {
-            print("Ошибка сохранения: \(error)")
             return false
         }
     }
@@ -101,10 +98,8 @@ class CoreDataManager {
             let result = try viewContext.fetch(likedBookRequest)
             let work = result.map { Work(key: $0.key, title: $0.title, coverEditionKey: nil, cover_i: Int($0.coverI), authorName: [$0.author ?? ""])
             }
-            print("Извлеченные книги: \(work)")
             return work
         } catch {
-            print("Ошибка извлечения: \(error)")
             return []
         }
     }
@@ -153,6 +148,90 @@ class CoreDataManager {
         } catch {
             print(error.localizedDescription)
             return
+        }
+    }
+    
+    // MARK: - List Methods
+    func loadList() -> [String]? {
+        let listRequest = List.fetchRequest()
+        do {
+            let items = try viewContext.fetch(listRequest)
+            let output = items.compactMap { $0.listName }
+            return output.reversed()
+        } catch {
+            print("Load list error: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    func saveList(listName: String) {
+        let list = List(context: viewContext)
+        list.listName = listName
+        saveContext()
+    }
+    
+    func saveListBook(from model: Book, parentName: String) {
+        let listBook = ItemList(context: viewContext)
+        listBook.authorName = model.authorName?.first
+        listBook.title = model.title
+        listBook.coverI = Int64(model.coverI ?? 0)
+        listBook.key = model.key
+        listBook.isSelected = true
+        listBook.parentItem = findList(withName: parentName)
+        saveContext()
+    }
+    
+    func loadListItems(parentCategory: String) -> [Book]? {
+        let listRequest = ItemList.fetchRequest()
+        listRequest.predicate = NSPredicate(format: "parentItem.listName == %@", parentCategory)
+        
+        do {
+            let items = try viewContext.fetch(listRequest)
+            
+            let output = items.compactMap {
+                Book(
+                    key: $0.key,
+                    type: nil,
+                    seed: nil,
+                    title: $0.title,
+                    ia: nil,
+                    iaCollection: nil,
+                    coverI: Int($0.coverI),
+                    authorName: [$0.authorName ?? ""]
+                )
+            }
+            return output
+        } catch {
+            print("Load list items error: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    func isBookList(bookKey: String) -> Bool {
+        let fetchRequest: NSFetchRequest<ItemList> = ItemList.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "key == %@", bookKey)
+        
+        do {
+            let existingBooks = try viewContext.fetch(fetchRequest)
+            if let existingBook = existingBooks.first {
+                return existingBook.isSelected
+            }
+        } catch {
+            print("Is book list error: \(error.localizedDescription)")
+        }
+        return false
+    }
+    
+    private func findList(withName name: String) -> List? {
+        let fetchRequest: NSFetchRequest<List> = List.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "listName == %@", name)
+        
+        do {
+            let lists = try viewContext.fetch(fetchRequest)
+            return lists.first
+        } catch {
+            print("Error fetching list: \(error.localizedDescription)")
+            return nil
         }
     }
 }

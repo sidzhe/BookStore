@@ -93,4 +93,13 @@ final class Builder {
         view.presenter = presenter
         return view
     }
+    
+    //AddBookVC
+    static func createAddBookVC(title: String) -> UIViewController {
+        let view = AddBookViewController()
+        let networkService = NetworkService()
+        let presenter = AddBookPresenter(view: view, networkService: networkService, title: title)
+        view.presenter = presenter
+        return view
+    }
 }

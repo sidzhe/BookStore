@@ -56,7 +56,8 @@ final class ListViewController: UIViewController {
         alert.addTextField { $0.placeholder = "New category" }
         let action = UIAlertAction(title: "Add", style: .default) { [weak self] action in
             if let text = alert.textFields?.first?.text, !text.isEmpty {
-                self?.presenter.data.append(text)
+                self?.presenter.data.insert(text, at: 0)
+                self?.presenter.saveList(listName: text)
                 self?.collectionView.reloadData()
             }
         }
