@@ -7,8 +7,8 @@
 * API: [Podcastindex](https://openlibrary.org/developers/api)
 
 
-  <img src="https://github.com/U-ggg/BookStore/blob/develop/BookStore/Support/Assets.xcassets/billboard/Screenshot%201.jpg?raw=true" alt="Simulator Screenshot - iPhone 14 Pro - 2023-09-13 at 20 14 50" style="width:404px;"/>
-  <img src="https://github.com/U-ggg/BookStore/blob/develop/BookStore/Support/Assets.xcassets/billboard/Screenshot%202.jpg?raw=true" alt="Simulator Screenshot - iPhone 14 Pro - 2023-09-13 at 20 14 50" style="width:404px;"/>
+  <img src="https://github.com/U-ggg/BookStore/blob/develop/BookStore/Support/Assets.xcassets/billboard/Screenshot%201.jpg?raw=true" alt="Simulator Screenshot - iPhone 14 Pro - 2023-09-13 at 20 14 50" style="width:300px;"/>
+  <img src="https://github.com/U-ggg/BookStore/blob/develop/BookStore/Support/Assets.xcassets/billboard/Screenshot%202.jpg?raw=true" alt="Simulator Screenshot - iPhone 14 Pro - 2023-09-13 at 20 14 50" style="width:300px;"/>
 
   <img src="https://github.com/U-ggg/BookStore/blob/develop/BookStore/Support/Assets.xcassets/billboard/Screenshot%203.jpg?raw=true" alt="Simulator Screenshot - iPhone 14 Pro - 2023-09-13 at 20 14 50" style="width:200px;"/>  <img src="https://github.com/U-ggg/BookStore/blob/develop/BookStore/Support/Assets.xcassets/billboard/Screenshot%204.jpg?raw=true" alt="Simulator Screenshot - iPhone 14 Pro - 2023-09-13 at 20 14 50" style="width:200px;"/>
   <img src="https://github.com/U-ggg/BookStore/blob/develop/BookStore/Support/Assets.xcassets/billboard/Screenshot%205.jpg?raw=true" alt="Simulator Screenshot - iPhone 14 Pro - 2023-09-13 at 20 14 50" style="width:200px;"/>
