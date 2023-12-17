@@ -103,11 +103,12 @@ extension AddBookViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AddBookCell.id, for: indexPath) as? AddBookCell
         guard let model = presenter.book else { return UICollectionViewCell () }
-        var state = CoreDataManager.shared.isBookList(bookKey: model[indexPath.row].key ?? "")
         cell?.addListCallBack = { [weak self] in
+            guard let self = self else { return }
             let book = model[indexPath.row]
-            CoreDataManager.shared.saveListBook(from: book, parentName: self?.title ?? "")
+            CoreDataManager.shared.saveListBook(from: book, parentName: presenter.title)
         }
+        let state = CoreDataManager.shared.isBookList(bookKey: model[indexPath.row].key ?? "")
         cell?.config(book: model[indexPath.row], state: state)
         return cell ?? UICollectionViewCell()
     }

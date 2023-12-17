@@ -38,7 +38,7 @@ final class WantToReadCell: UICollectionViewCell {
         contentView.addSubViews(bookImage, button, stackView)
         
         contentView.layer.cornerRadius = 8
-        contentView.layer.masksToBounds = true
+        contentView.clipsToBounds = true
         
         button.setImage(UIImage(systemName: "xmark"), for: .normal)
         button.tintColor = .white

@@ -172,39 +172,23 @@ class CoreDataManager {
     
     func saveListBook(from model: Book, parentName: String) {
         let listBook = ItemList(context: viewContext)
-        let list = List(context: viewContext)
-        list.listName = parentName
-        listBook.parentItem = list
         listBook.authorName = model.authorName?.first
         listBook.title = model.title
         listBook.coverI = Int64(model.coverI ?? 0)
         listBook.key = model.key
         listBook.isSelected = true
-        
-        do {
-            try viewContext.save()
-        } catch {
-            print("Save list book error: \(error.localizedDescription)")
-        }
+        listBook.parentItem = findList(withName: parentName)
+        saveContext()
     }
     
     func loadListItems(parentCategory: String) -> [Book]? {
-        let itemListRequest: NSFetchRequest<ItemList> = ItemList.fetchRequest()
-        let categoryName = List(context: viewContext)
-        categoryName.listName = parentCategory
-        print("categoryName.listName \(categoryName.listName)")
-        let predicateLoad = NSPredicate(format: "parentItem.listName MATCHES %@", categoryName.listName ?? "")
-        
-        if let predicateSort = itemListRequest.predicate {
-            itemListRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicateLoad, predicateSort])
-        } else {
-            itemListRequest.predicate = predicateLoad
-        }
+        let listRequest = ItemList.fetchRequest()
+        listRequest.predicate = NSPredicate(format: "parentItem.listName == %@", parentCategory)
         
         do {
-            let items = try viewContext.fetch(itemListRequest)
+            let items = try viewContext.fetch(listRequest)
             
-            let output = items.map {
+            let output = items.compactMap {
                 Book(
                     key: $0.key,
                     type: nil,
@@ -238,4 +222,16 @@ class CoreDataManager {
         return false
     }
     
+    private func findList(withName name: String) -> List? {
+        let fetchRequest: NSFetchRequest<List> = List.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "listName == %@", name)
+        
+        do {
+            let lists = try viewContext.fetch(fetchRequest)
+            return lists.first
+        } catch {
+            print("Error fetching list: \(error.localizedDescription)")
+            return nil
+        }
+    }
 }
