@@ -43,6 +43,7 @@ class CoreDataManager {
             }
         }
     }
+    
     //MARK: - Save bookModel
     func saveBook(from bookModel: Work) {
         let fetchRequest: NSFetchRequest<BookCD> = BookCD.fetchRequest()

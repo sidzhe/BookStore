@@ -49,7 +49,6 @@ final class FavoritesPresenter: FavoritesPresenterProtocol {
     
     func getLikedBooks() {
         book = coreData.getLikedBook()
-        print("Обновленные данные: \(String(describing: book))")
     }
     
     //Логика удаления ячейки
